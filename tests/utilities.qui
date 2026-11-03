@@ -1,0 +1,130 @@
+import collections
+
+int[] values = [7, 3, 7, 2, 3]
+int[] stable = collections.unique(values)
+print.line("unique={stable[0]}:{stable[1]}:{stable[2]}")
+int[] empty = []
+print.line("empty={len(collections.unique(empty))}")
+print.line("index={collections.index(values, 3)}")
+match collections.index(values, 99)
+    nat unexpected
+        print.line("unexpected")
+    error problem
+        print.line("missing={problem.code}")
+match collections.index(empty, 7)
+    nat unexpected
+        print.line("unexpected")
+    error problem
+        print.line("empty-index={problem.code}")
+string[] keys = ["b", "a", "b", "a", "b"]
+auto grouped = collections.group_by(keys, values)
+print.line("keys={grouped.keys().join("|")}")
+match grouped.get("b")
+    int[] group
+        print.line("group={group[0]}:{group[1]}:{group[2]}")
+    none
+        print.line("unexpected")
+string[] no_keys = []
+auto no_groups = collections.group_by(no_keys, empty)
+print.line("empty-groups={no_groups.size()}")
+match collections.group_by(keys, empty)
+    map<string, int[]> unexpected
+        print.line("unexpected")
+    error problem
+        print.line("length={problem.code}")
+print.line("unchanged={len(values)}:{values[0]}:{values[4]}")
+
+distinct<int> items = collections.to_distinct(values)
+int[] ordered = items.values()
+print.line("distinct={ordered[0]}:{ordered[1]}:{ordered[2]}")
+print.line("empty-distinct={collections.to_distinct(empty).size()}")
+.items.add(99)
+stable[0] = 100
+print.line("independent={len(values)}:{values[0]}:{items.size()}")
+
+string[] repeated = ["first", "second", "first"]
+string[] unique_words = collections.unique(repeated)
+print.line("words={unique_words.join("|")}")
+print.line("first-index={collections.index(values, 7)}")
+print.line("extensions={values.index(2)}:{len(values.unique())}:{values.to_distinct().size()}")
+real64[] decimals = [1.25, 2.5, 1.25]
+print.line("float-index={collections.index(decimals, 1.25)}")
+match collections.group_by(no_keys, values)
+    map<string, int[]> unexpected
+        print.line("unexpected")
+    error problem
+        print.line("extra-values={problem.code}")
+(string, int)[] pairs = [("a", 1), ("b", 2), ("a", 1)]
+distinct<(string, int)> pair_set = collections.to_distinct(pairs)
+string[] labels = ["x", "y", "z"]
+auto paired = collections.group_by(pairs, labels)
+match paired.get(("a", 1))
+    string[] group
+        print.line("tuple={pair_set.size()}:{group.join("|")}")
+    none
+        print.line("unexpected")
+int[] copy = []
+match grouped.get("b")
+    int[] group
+        copy = group
+    none
+        print.line("unexpected")
+copy[0] = 999
+match grouped.get("b")
+    int[] group
+        print.line("group-independent={group[0]}")
+    none
+        print.line("unexpected")
+
+collections.Queue<string> pending()
+print.line("queue-empty={pending.empty()}")
+.pending.push("first")
+.pending.push("second")
+auto copied_queue = pending
+match .pending.pop()
+    string first
+        print.line("queue-first={first}")
+    none
+        print.line("queue-missing")
+.pending.push("third")
+while not pending.empty()
+    match .pending.pop()
+        string item
+            print.line("queue-next={item}")
+        none
+            print.line("queue-missing")
+print.line("queue-copy-size={copied_queue.size()}")
+
+class Scored(string name, int score)
+int score_of(Scored item)
+    return item.score
+Scored[] scored = [Scored("first", 1), Scored("second", 2), Scored("third", 1)]
+func<int>(Scored) select_score = score_of
+auto ranked_records = collections.sorted_by(scored, select_score, descending = true)
+print.line("scored={ranked_records[0].name}:{ranked_records[1].name}:{ranked_records[2].name}")
+
+map<string, int> scores
+.scores.set("second", 2)
+.scores.set("first", 1)
+.scores.set("second", 3)
+auto score_entries = collections.entries(scores)
+for (string name, int score) = score_entries[]
+    print.line("entry={name}:{score}")
+match .pending.take()
+    string unexpected
+        print.line("unexpected={unexpected}")
+    error failure
+        print.line("queue-drained={failure.code}")
+collections.Queue<int> seeded([7, 9])
+int seeded_first = .seeded.take()
+int seeded_second = .seeded.take()
+print.line("queue-seeded={seeded_first}:{seeded_second}")
+collections.Queue<int | string> mixed()
+.mixed.push("union")
+match .mixed.take()
+    int unexpected
+        print.line("unexpected={unexpected}")
+    string value
+        print.line("queue-union={value}")
+    error failure
+        print.line("unexpected={failure.code}")

@@ -1,0 +1,35 @@
+name: CI
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: quidra-lang/quidra
+          ref: develop
+          path: core
+      - run: sudo apt-get update && sudo apt-get install -y llvm clang cmake libcurl4-openssl-dev ccache
+      - uses: actions/cache/restore@v4
+        id: core-cache
+        with:
+          path: ~/.cache/ccache
+          key: core-${{ runner.os }}-${{ hashFiles('core/CMakeLists.txt', 'core/src/**', 'core/include/**') }}
+          restore-keys: |
+            core-${{ runner.os }}-
+      - run: cmake -S core -B core/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER=ccache && cmake --build core/build --target quidra --parallel 3
+      - run: bash tests/integration.sh "$PWD/core/build/quidra"
+
+      - uses: actions/cache/save@v4
+        if: always() && steps.core-cache.outputs.cache-hit != 'true'
+        with:
+          path: ~/.cache/ccache
+          key: ${{ steps.core-cache.outputs.cache-primary-key }}

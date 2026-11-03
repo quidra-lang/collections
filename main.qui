@@ -1,0 +1,272 @@
+nat | error index<T: equatable>(extend T[] values, T needle)
+    for nat i < len(values)
+        if values[i] == needle
+            return i
+    return error("value is absent from the array", code = "COLLECTIONS_INDEX")
+
+void push<T>(extend T[] &values, T value)
+    values = values.append(value)
+
+private T remove_last<T>(T[] &values)
+    nat last = len(values) - 1
+    T value = values[last]
+    values = values[:<last]
+    return value
+
+T | none pop<T>(extend T[] &values)
+    if len(values) == 0
+        return none
+    return remove_last(&values)
+
+T | error take<T>(extend T[] &values)
+    if len(values) == 0
+        return error("cannot take from an empty array", code = "COLLECTIONS_EMPTY")
+    return remove_last(&values)
+
+bool remove<T: equatable>(extend T[] &values, T needle)
+    for nat i < len(values)
+        if values[i] == needle
+            if i + 1 == len(values)
+                values = values[:<i]
+            else
+                values = values[:<i].concat(values[i + 1:])
+            return true
+    return false
+
+void | error insert<T>(extend T[] &values, nat index, T value)
+    if index > len(values)
+        return error("insertion index exceeds the array length", code = "COLLECTIONS_INDEX")
+    if index == len(values)
+        values = values.append(value)
+    else
+        values = values[:<index].append(value).concat(values[index:])
+    return void
+
+T[][] | error chunks<T>(extend T[] values, nat size)
+    if size == 0
+        return error("chunk size must be positive", code = "COLLECTIONS_SIZE")
+    T[][] result = []
+    nat start = 0
+    while start < len(values)
+        nat remaining = len(values) - start
+        nat count = if size < remaining then size else remaining
+        nat end = start + count
+        result = result.append(values[start:<end])
+        start = end
+    return result
+
+private class HeapEntry<T, P>(T value, P priority, nat insertion)
+
+class PriorityQueue<T, P: ordered>(const func<bool>(T, T) | none tie_before = none)
+    private HeapEntry<T, P>[] entries = []
+    private nat active = 0
+    private nat next_insertion = 0
+
+    private bool precedes(nat left, nat right)
+        if entries[left].priority < entries[right].priority
+            return true
+        if entries[left].priority > entries[right].priority
+            return false
+        match tie_before
+            func<bool>(T, T) compare
+                if compare(entries[left].value, entries[right].value)
+                    return true
+                if compare(entries[right].value, entries[left].value)
+                    return false
+            none
+                bool unused = false
+        return entries[left].insertion < entries[right].insertion
+
+    nat size()
+        return active
+
+    bool empty()
+        return active == 0
+
+    (T, P) | none peek()
+        if active == 0
+            return none
+        return (entries[0].value, entries[0].priority)
+
+    void .push(T value, P priority)
+        HeapEntry<T, P> entry = HeapEntry<T, P>(value, priority, next_insertion)
+        next_insertion += 1
+        if active < len(entries)
+            entries[active] = entry
+        else
+            entries = entries.append(entry)
+        active += 1
+        nat index = active - 1
+        while index > 0
+            nat parent = (index - 1) / 2
+            if not precedes(index, parent)
+                break
+            HeapEntry<T, P> previous = entries[index]
+            entries[index] = entries[parent]
+            entries[parent] = previous
+            index = parent
+
+    private (T, P) | none .remove_first()
+        if active == 0
+            return none
+        HeapEntry<T, P> first = entries[0]
+        active -= 1
+        if active == 0
+            entries = []
+            return (first.value, first.priority)
+        entries[0] = entries[active]
+        nat index = 0
+        while true
+            nat left = 2 * index + 1
+            if left >= active
+                break
+            nat best = left
+            nat right = left + 1
+            if right < active and precedes(right, left)
+                best = right
+            if not precedes(best, index)
+                break
+            HeapEntry<T, P> previous = entries[index]
+            entries[index] = entries[best]
+            entries[best] = previous
+            index = best
+        if active * 4 < len(entries)
+            entries = entries[:<active]
+        return (first.value, first.priority)
+
+    (T, P) | none .pop()
+        return .remove_first()
+
+    (T, P) | error .take()
+        match .remove_first()
+            (T value, P priority)
+                return (value, priority)
+            none
+                return error("cannot take from an empty priority queue", code = "COLLECTIONS_PRIORITY_QUEUE")
+
+    void .clear()
+        entries = []
+        active = 0
+
+map<T, nat> frequencies<T>(extend T[] values)
+    map<T, nat> counts
+    for T value = values[]
+        .counts.increment(value)
+    return counts
+
+distinct<T> to_distinct<T>(extend T[] values)
+    distinct<T> result
+    for T value = values[]
+        .result.add(value)
+    return result
+
+T[] unique<T>(extend T[] values)
+    return to_distinct(values).values()
+
+map<K, V[]> | error group_by<K, V>(K[] keys, V[] values)
+    if len(keys) != len(values)
+        return error("group_by requires equal-length arrays", code = "COLLECTIONS_LENGTH")
+    map<K, V[]> grouped
+    for nat i < len(keys)
+        match grouped.get(keys[i])
+            V[] group
+                .grouped.set(keys[i], group.append(values[i]))
+            none
+                .grouped.set(keys[i], [values[i]])
+    return grouped
+
+map<K, V> | error group_sum<K, V: integer>(K[] keys, V[] values)
+    if len(keys) != len(values)
+        return error("group_sum requires equal-length arrays", code = "COLLECTIONS_LENGTH")
+    map<K, V> grouped
+    for nat i < len(keys)
+        .grouped.increment(keys[i], by = values[i])
+    return grouped
+
+(T, nat)[] runs<T: equatable>(T[] values)
+    (T, nat)[] result = []
+    if len(values) == 0
+        return result
+    T current = values[0]
+    nat count = 1
+    for 1 <= nat i < len(values)
+        if values[i] == current
+            count += 1
+        else
+            result = result.append((current, count))
+            current = values[i]
+            count = 1
+    return result.append((current, count))
+
+int lex_compare<T: ordered>(T[] left, T[] right)
+    nat common = if len(left) < len(right) then len(left) else len(right)
+    for nat i < common
+        if left[i] < right[i]
+            return -1
+        if left[i] > right[i]
+            return 1
+    if len(left) < len(right)
+        return -1
+    if len(left) > len(right)
+        return 1
+    return 0
+
+nat[] lex_order<T: ordered>(T[][] keys, bool descending = false)
+    nat[] order = keys.indices()
+    for 1 <= nat i < len(order)
+        nat current = order[i]
+        nat j = i
+        while j > 0
+            int comparison = lex_compare(keys[current], keys[order[j - 1]])
+            if (not descending and comparison >= 0) or (descending and comparison <= 0)
+                break
+            order[j] = order[j - 1]
+            j -= 1
+        order[j] = current
+    return order
+
+class Queue<T>(local T[] initial = [])
+    private T[] values = initial
+    private nat head = 0
+
+    nat size()
+        return len(values) - head
+
+    bool empty()
+        return head == len(values)
+
+    void .push(T value)
+        values = values.append(value)
+
+    private T .remove_first()
+        T value = values[head]
+        head += 1
+        if head == len(values)
+            values = []
+            head = 0
+        elif head >= size()
+            values = values[head:]
+            head = 0
+        return value
+
+    T | none .pop()
+        if empty()
+            return none
+        return .remove_first()
+
+    T | error .take()
+        if empty()
+            return error("cannot take from an empty queue", code = "COLLECTIONS_QUEUE")
+        return .remove_first()
+
+(K, V)[] entries<K, V>(extend map<K, V> source)
+    K[] keys = source.keys()
+    V[] values = source.values()
+    (K, V)[] result = []
+    for nat i < len(keys)
+        result = result.append((keys[i], values[i]))
+    return result
+
+T[] sorted_by<T, K>(extend T[] values, const func<K>(T) key, bool descending = false)
+    K[] keys = [for T value = values[] then key(value)]
+    return values.sorted(by = keys, descending = descending)

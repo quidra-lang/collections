@@ -1,0 +1,4 @@
+name = collections
+version = 0.6.0
+repository = https://github.com/quidra-lang/collections
+requires.quidra = >=0.6.0 <0.7.0

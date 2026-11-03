@@ -1,0 +1,76 @@
+name: release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read project version
+        id: package
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os
+          import tomllib
+          from pathlib import Path
+          p = tomllib.loads(Path("project.toml").read_text(encoding="utf-8"))["package"]
+          if p["import"] != "collections":
+              raise SystemExit("wrong package import identity")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as out:
+              print(f"version={p['version']}", file=out)
+          PY
+
+      - name: Require immutable same-version Core
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="v${{ steps.package.outputs.version }}"
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1; then
+            echo "release tag already exists: $tag" >&2
+            exit 1
+          fi
+          git ls-remote --exit-code --tags https://github.com/quidra-lang/quidra.git "refs/tags/$tag" >/dev/null
+
+      - uses: actions/checkout@v4
+        with:
+          repository: quidra-lang/quidra
+          ref: v${{ steps.package.outputs.version }}
+          path: quidra
+
+      - name: Dependencies
+        run: sudo apt-get update && sudo apt-get install -y clang llvm cmake libcurl4-openssl-dev
+
+      - name: Build released Core
+        run: cmake -S quidra -B quidra/build -DCMAKE_BUILD_TYPE=Release && cmake --build quidra/build --target quidra --parallel 3
+
+      - name: Enforce Core native ABI boundary
+        run: python3 quidra/tests/package_native_boundary_tests.py .
+
+      - name: Validate package
+        run: quidra/build/quidra package validate "$GITHUB_WORKSPACE"
+
+      - name: Integration tests
+        run: bash tests/integration.sh "$GITHUB_WORKSPACE/quidra/build/quidra"
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="v${{ steps.package.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$tag" "$GITHUB_SHA" -m "collections $tag"
+          git push origin "$tag"
+          gh release create "$tag" --target "$GITHUB_SHA" --title "Collections $tag" --generate-notes

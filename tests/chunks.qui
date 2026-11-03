@@ -1,0 +1,26 @@
+import collections
+
+int[] values = [1, 2, 3, 4, 5]
+int[][] groups = values.chunks(2)
+print.line("partial={len(groups)}:{len(groups[0])}:{len(groups[2])}:{groups[2][0]}")
+int[][] exact = values[:<4].chunks(2)
+print.line("exact={len(exact)}:{exact[1][1]}")
+int[][] wide = values.chunks(9)
+print.line("wide={len(wide)}:{len(wide[0])}")
+int[][] huge = values.chunks(18446744073709551615)
+print.line("huge={len(huge)}:{len(huge[0])}")
+int[] empty = []
+int[][] no_groups = empty.chunks(2)
+print.line("empty={len(no_groups)}")
+groups[0][0] = 99
+values[4] = 8
+print.line("independent={values[0]}:{groups[2][0]}")
+match empty.chunks(0)
+    int[][] unexpected
+        print.line("unexpected")
+    error failure
+        print.line("zero={failure.code}")
+(string, int)[] pairs = [("λ", 1), ("海", 2), ("x", 3)]
+auto pair_groups = pairs.chunks(2)
+(string label, int number) = pair_groups[1][0]
+print.line("tuple={label}:{number}")
