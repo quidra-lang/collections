@@ -204,6 +204,12 @@ second. Undirected edges add both directions, with one entry per self-loop.
 Repeated edges remain repeated. An endpoint outside the zero-based range
 reports `COLLECTIONS_VERTEX`.
 
+`weighted_adjacency_lists(vertices, edges, undirected = false)` takes
+`(source, target, weight)` integer triples and returns `(neighbor, weight)`
+pairs in each row. It uses the same endpoint and direction rules. Rows are
+ordered by neighbor, with parallel edges retaining their input order.
+Weights are preserved as supplied, including zero and negative values.
+
 ## Binary node storage
 
 `BinaryNodes<T>()` owns records with a value and optional left and right
@@ -215,8 +221,14 @@ store. Keep links within their store and maintain an acyclic tree with no
 shared subtrees. Unlinking a node preserves its handle and slot for the
 lifetime of the store.
 
-`leftmost(id)` follows left links until the terminal node. `height(root)`
-counts nodes on the longest root-to-leaf path. `traverse(root, order)` supports
+`leftmost(id)` follows left links until the terminal node.
+`.detach_leftmost(root)` returns the leftmost value and the remaining root.
+It splices the leftmost node's right child into its former position and
+keeps the detached record's slot valid. If the root itself is detached,
+the caller must use the returned root, which can be `none`.
+
+`height(root)` counts nodes on the longest root-to-leaf path.
+`traverse(root, order)` supports
 `"inorder"`, `"preorder"`, and `"postorder"`; `levelorder(root)` visits by
 depth, left to right. A missing root has height zero and produces empty
 traversals. An invalid traversal order reports `COLLECTIONS_ORDER`.

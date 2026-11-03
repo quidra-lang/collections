@@ -298,20 +298,43 @@ T[] sorted_by_pair<T, K, L>(extend T[] values, const func<(K, L)>(T) key, (bool,
         second = second.append(secondary)
     return values.sorted(by = (first, second), descending = descending)
 
+private bool valid_vertex(int vertex, nat vertices)
+    if vertex < 0
+        return false
+    nat index = nat(vertex)
+    return index < vertices
+
 int[][] | error adjacency_lists(nat vertices, (int, int)[] edges, bool undirected = false)
     int[] empty = []
     int[][] neighbors = array(vertices, fill = empty)
     for (int source, int target) = edges[]
-        if source < 0 or target < 0
+        if not valid_vertex(source, vertices) or not valid_vertex(target, vertices)
             return error("edge endpoint is outside the graph", code = "COLLECTIONS_VERTEX")
         nat from = nat(source)
         nat to = nat(target)
-        if from >= vertices or to >= vertices
-            return error("edge endpoint is outside the graph", code = "COLLECTIONS_VERTEX")
         neighbors[from] = neighbors[from].append(target)
         if undirected and from != to
             neighbors[to] = neighbors[to].append(source)
     return [for int[] row = neighbors[] then row.sorted()]
+
+(int, int)[][] | error weighted_adjacency_lists(nat vertices, (int, int, int)[] edges, bool undirected = false)
+    (int, int)[] empty = []
+    (int, int)[][] neighbors = array(vertices, fill = empty)
+    for (int source, int target, int weight) = edges[]
+        if not valid_vertex(source, vertices) or not valid_vertex(target, vertices)
+            return error("edge endpoint is outside the graph", code = "COLLECTIONS_VERTEX")
+        nat from = nat(source)
+        nat to = nat(target)
+        neighbors[from] = neighbors[from].append((target, weight))
+        if undirected and from != to
+            neighbors[to] = neighbors[to].append((source, weight))
+    for nat vertex < vertices
+        (int, int)[] row = neighbors[vertex]
+        int[] targets = []
+        for (int target, _) = row[]
+            targets = targets.append(target)
+        neighbors[vertex] = row.sorted(by = targets)
+    return neighbors
 
 class NodeId(const nat slot)
 
@@ -356,6 +379,27 @@ class BinaryNodes<T>()
                     current = child
                 none
                     return current
+        return error("invalid left-child chain", code = "COLLECTIONS_NODE")
+
+    (T, NodeId | none) | error .detach_leftmost(NodeId root)
+        NodeId | none parent_id = none
+        NodeId current = root
+        for nat step < len(nodes)
+            auto node = try get(current)
+            match node.left
+                NodeId child
+                    parent_id = current
+                    current = child
+                none
+                    match parent_id
+                        NodeId parent
+                            auto record = try get(parent)
+                            record.left = node.right
+                            try .set(parent, record)
+                            NodeId | none remaining = root
+                            return (node.value, remaining)
+                        none
+                            return (node.value, node.right)
         return error("invalid left-child chain", code = "COLLECTIONS_NODE")
 
     nat height(NodeId | none id)

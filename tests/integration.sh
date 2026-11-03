@@ -128,6 +128,9 @@ cat > "$TMP/graph-and-tree-expected" <<'EXPECTED'
 true
 true
 COLLECTIONS_VERTEX
+true
+true
+COLLECTIONS_VERTEX
 fourth:first:third:second
 5:8:7
 COLLECTIONS_NODE
@@ -137,5 +140,8 @@ true
 true
 2:0
 7
+31:39:34
+31:34
+COLLECTIONS_NODE
 EXPECTED
 diff -u "$TMP/graph-and-tree-expected" "$TMP/graph-and-tree-output"
