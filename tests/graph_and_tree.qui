@@ -1,9 +1,9 @@
 import collections
 
-(int, int)[] edges = [(2, 0), (0, 1), (0, 0), (0, 1)]
-int[][] graph = collections.adjacency_lists(4, edges, undirected = true)
+(int, int)[] edges := [(2, 0), (0, 1), (0, 0), (0, 1)]
+int[][] graph := collections.adjacency_lists(4, edges, undirected = true)
 print.line(graph == [[0, 1, 1, 2], [0, 0], [0], []])
-int[][] directed = collections.adjacency_lists(4, edges)
+int[][] directed := collections.adjacency_lists(4, edges)
 print.line(directed == [[0, 1, 1], [], [0], []])
 match collections.adjacency_lists(2, [(-1, 0)])
     error problem
@@ -11,10 +11,10 @@ match collections.adjacency_lists(2, [(-1, 0)])
     int[][]
         print.line("unexpected graph")
 
-(int, int, int)[] weighted = [(2, 0, 9), (0, 1, 8), (0, 0, 0), (0, 1, 3)]
-(int, int)[][] undirected = collections.weighted_adjacency_lists(4, weighted, undirected = true)
+(int, int, int)[] weighted := [(2, 0, 9), (0, 1, 8), (0, 0, 0), (0, 1, 3)]
+(int, int)[][] undirected := collections.weighted_adjacency_lists(4, weighted, undirected = true)
 print.line(undirected == [[(0, 0), (1, 8), (1, 3), (2, 9)], [(0, 8), (0, 3)], [(0, 9)], []])
-(int, int)[][] one_way = collections.weighted_adjacency_lists(4, weighted)
+(int, int)[][] one_way := collections.weighted_adjacency_lists(4, weighted)
 print.line(one_way == [[(0, 0), (1, 8), (1, 3)], [], [(0, 9)], []])
 match collections.weighted_adjacency_lists(2, [(0, 2, 1)])
     error problem
@@ -26,48 +26,48 @@ class Record(string name, int score, int tie)
 (int, int) rank(Record record)
     return (record.score, record.tie)
 
-Record[] records = [Record("first", 2, 1), Record("second", 1, 3), Record("third", 2, 1), Record("fourth", 2, 0)]
-func<(int, int)>(Record) key = rank
-auto sorted = records.sorted_by_pair(key, descending = (true, false))
-print.line([for Record record = sorted[] then record.name].join(":"))
+Record[] records := [Record("first", 2, 1), Record("second", 1, 3), Record("third", 2, 1), Record("fourth", 2, 0)]
+func<(int, int)>(Record) key := rank
+sorted := records.sorted_by_pair(key, descending = (true, false))
+print.line([for Record record := sorted[] then record.name].join(":"))
 
-collections.BinaryNodes<int> nodes()
-auto leaf = .nodes.add(7)
-auto root = .nodes.add(5, right = leaf)
-auto copy = nodes
+collections.BinaryNodes<int> nodes := collections.BinaryNodes<int>()
+leaf := .nodes.add(7)
+root := .nodes.add(5, right = leaf)
+copy := nodes
 .nodes.set(root, collections.BinaryNode<int>(8, left = leaf))
-auto original = copy.get(root)
-auto updated = nodes.get(root)
-auto child = nodes.get(updated.left)
+original := copy.get(root)
+updated := nodes.get(root)
+child := nodes.get(updated.left)
 print.line("{original.value}:{updated.value}:{child.value}")
 match nodes.get(none)
     error problem
         print.line(problem.code)
     collections.BinaryNode<int>
         print.line("unexpected node")
-int[] preorder = nodes.traverse(root, "preorder")
+int[] preorder := nodes.traverse(root, "preorder")
 print.line(preorder == [int(8), 7])
-int[] inorder = nodes.traverse(root, "inorder")
+int[] inorder := nodes.traverse(root, "inorder")
 print.line(inorder == [int(7), 8])
-int[] postorder = nodes.traverse(root, "postorder")
+int[] postorder := nodes.traverse(root, "postorder")
 print.line(postorder == [int(7), 8])
-int[] levelorder = nodes.levelorder(root)
+int[] levelorder := nodes.levelorder(root)
 print.line(levelorder == [int(8), 7])
 print.line("{nodes.height(root)}:{nodes.height(none)}")
-auto first = nodes.leftmost(root)
-auto first_node = nodes.get(first)
+first := nodes.leftmost(root)
+first_node := nodes.get(first)
 print.line(first_node.value)
 
-collections.BinaryNodes<int> successor_tree()
-auto successor_child = .successor_tree.add(34)
-auto successor = .successor_tree.add(31, right = successor_child)
-auto subtree = .successor_tree.add(39, left = successor)
-(int extracted, collections.NodeId | none remaining) = .successor_tree.detach_leftmost(subtree)
-auto remaining_root = successor_tree.get(remaining)
-auto replacement = successor_tree.get(remaining_root.left)
+collections.BinaryNodes<int> successor_tree := collections.BinaryNodes<int>()
+successor_child := .successor_tree.add(34)
+successor := .successor_tree.add(31, right = successor_child)
+subtree := .successor_tree.add(39, left = successor)
+(int extracted, collections.NodeId | none remaining) := .successor_tree.detach_leftmost(subtree)
+remaining_root := successor_tree.get(remaining)
+replacement := successor_tree.get(remaining_root.left)
 print.line("{extracted}:{remaining_root.value}:{replacement.value}")
-(int minimum, collections.NodeId | none new_root) = .successor_tree.detach_leftmost(successor)
-auto promoted = successor_tree.get(new_root)
+(int minimum, collections.NodeId | none new_root) := .successor_tree.detach_leftmost(successor)
+promoted := successor_tree.get(new_root)
 print.line("{minimum}:{promoted.value}")
 match .successor_tree.detach_leftmost(collections.NodeId(100))
     error problem
@@ -75,30 +75,30 @@ match .successor_tree.detach_leftmost(collections.NodeId(100))
     (int, collections.NodeId | none)
         print.line("unexpected successor")
 
-string[] labels = ["z", "a", "isolated"]
-(string, string)[] labeled_edges = [("z", "a"), ("z", "z"), ("z", "a")]
-collections.DirectedGraph labeled = collections.directed_graph(labels, labeled_edges)
-nat[] outgoing = labeled.outgoing(0)
-int[] indegrees = labeled.indegrees()
+string[] labels := ["z", "a", "isolated"]
+(string, string)[] labeled_edges := [("z", "a"), ("z", "z"), ("z", "a")]
+collections.DirectedGraph labeled := collections.directed_graph(labels, labeled_edges)
+nat[] outgoing := labeled.outgoing(0)
+int[] indegrees := labeled.indegrees()
 print.line(outgoing == [nat(1), 0, 1] and indegrees == [int(1), 2, 0])
 indegrees[1] = 0
 print.line(labeled.indegrees()[1] == 2 and len(labeled.outgoing(2)) == 0)
-(int, int)[] no_edges = []
-int[] no_vertices = []
-collections.DirectedGraph empty_graph = collections.directed_graph(no_vertices, no_edges)
+(int, int)[] no_edges := []
+int[] no_vertices := []
+collections.DirectedGraph empty_graph := collections.directed_graph(no_vertices, no_edges)
 print.line(len(empty_graph.indegrees()) == 0)
 match collections.directed_graph(["a", "a"], labeled_edges)
     error problem
         print.line(problem.code)
     collections.DirectedGraph
         print.line("unexpected graph")
-(string, string)[] unknown_source = [("missing", "a")]
+(string, string)[] unknown_source := [("missing", "a")]
 match collections.directed_graph(labels, unknown_source)
     error problem
         print.line(problem.code)
     collections.DirectedGraph
         print.line("unexpected graph")
-(string, string)[] unknown_target = [("a", "missing")]
+(string, string)[] unknown_target := [("a", "missing")]
 match collections.directed_graph(labels, unknown_target)
     error problem
         print.line(problem.code)

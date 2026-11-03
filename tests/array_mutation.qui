@@ -1,7 +1,7 @@
 import collections
 
-int[] values = [1, 2, 1]
-int[] copied = values
+int[] values := [1, 2, 1]
+int[] copied := values
 .values.push(3)
 print.line("push={len(values)}:{values[3]}:{len(copied)}")
 print.line("remove={.values.remove(1)}:{values[0]}:{len(values)}")
@@ -24,9 +24,9 @@ match .values.insert(99, 4)
         print.line("insert-error={failure.code}:{len(values)}:{values[0]}:{values[2]}")
 print.line("remove-last={.values.remove(1)}:{len(values)}")
 print.line("remove-middle={.values.remove(2)}:{values[1]}")
-int[] single = [4]
+int[] single := [4]
 print.line("remove-single={.single.remove(4)}:{len(single)}")
-int[] empty = []
+int[] empty := []
 print.line("remove-empty={.empty.remove(1)}")
 match .empty.pop()
     int value
@@ -42,23 +42,23 @@ match .empty.take()
 print.line("insert-empty={.empty.take()}:{len(empty)}")
 .empty.push(6)
 print.line("pop-single={.empty.take()}:{len(empty)}")
-(string, int)[] pairs = [("a", 1)]
+(string, int)[] pairs := [("a", 1)]
 .pairs.push(("b", 2))
 print.line("tuple-remove={.pairs.remove(("a", 1))}")
-(string label, int number) = .pairs.take()
+(string label, int number) := .pairs.take()
 print.line("tuple-take={label}:{number}")
 class Item(int id)
-Item[] items = []
+Item[] items := []
 .items.push(Item(7))
-Item item = .items.take()
+Item item := .items.take()
 print.line("class-take={item.id}")
-collections.PriorityQueue<string, int> queue()
+collections.PriorityQueue<string, int> queue := collections.PriorityQueue<string, int>()
 .queue.push("later", 3)
 .queue.push("first", 1)
 .queue.push("second", 1)
-auto queue_copy = queue
+queue_copy := queue
 while not queue.empty()
-    (string name, int priority) = .queue.take()
+    (string name, int priority) := .queue.take()
     print.line("priority-take={name}:{priority}")
 print.line("priority-copy={queue_copy.size()}")
 match .queue.take()
@@ -67,15 +67,15 @@ match .queue.take()
     error failure
         print.line("priority-empty={failure.code}")
 
-int[] positions = [9, 4, 9, 6]
-int removed_at = .positions.remove_at(2)
+int[] positions := [9, 4, 9, 6]
+int removed_at := .positions.remove_at(2)
 print.line("remove-at={removed_at}:{positions == [int(9), 4, 6]}")
 match .positions.remove_at(3)
     error problem
         print.line("remove-at-error={problem.code}:{len(positions)}")
     int
         print.line("unexpected removal")
-int last_at = .positions.remove_at(2)
-int first_at = .positions.remove_at(0)
-int only_at = .positions.remove_at(0)
+int last_at := .positions.remove_at(2)
+int first_at := .positions.remove_at(0)
+int only_at := .positions.remove_at(0)
 print.line("remove-at-boundaries={last_at}:{first_at}:{only_at}:{len(positions)}")

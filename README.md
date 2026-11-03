@@ -8,17 +8,17 @@ First-party general-purpose collection algorithms and data structures for Quidra
 quidra install quidra-collections
 ```
 
-Use the matching Quidra 0.6.x Core toolchain. Numeric-array map values require Core commit `6ade1c5dd228e3b82b27fb9c30a081d80fc00345` or later; the compatibility workflow pins that baseline. Development occurs on `develop`.
+Use the matching Quidra 0.6.x Core toolchain. The declaration initializer syntax requires Core commit `8b082468b28acf32fd0dd0f5f649934274c94d08` or later; the compatibility workflow pins that baseline. Development occurs on `develop`.
 
 ## FIFO queue
 
 ```quidra
 import collections
 
-collections.Queue<string> jobs(["first", "second"])
+collections.Queue<string> jobs := collections.Queue<string>(["first", "second"])
 .jobs.push("third")
 while not jobs.empty()
-    string job = .jobs.take()
+    string job := .jobs.take()
     print.line(job)
 ```
 
@@ -29,7 +29,7 @@ while not jobs.empty()
 ```quidra
 import collections
 
-collections.PriorityQueue<string, int> queue = collections.PriorityQueue<string, int>()
+collections.PriorityQueue<string, int> queue := collections.PriorityQueue<string, int>()
 .queue.push("email", 3)
 .queue.push("deploy", 1)
 match .queue.pop()
@@ -45,13 +45,13 @@ Smaller priority values are removed first; equal priorities are removed in inser
 bool by_name(string a, string b)
     return [a, b].sorted()[0] == a and a != b
 
-func<bool>(string, string) name_order = by_name
-collections.PriorityQueue<string, int> named = collections.PriorityQueue<string, int>(tie_before = name_order)
+func<bool>(string, string) name_order := by_name
+collections.PriorityQueue<string, int> named := collections.PriorityQueue<string, int>(tie_before = name_order)
 .named.push("zeta", 2)
 .named.push("alpha", 2)
 ```
 
-The comparator runs only on equal priorities and must be pure, transitive and consistent for the queue's lifetime. `push`, `pop`, `take`, and `clear` mutate the receiver and require Quidra's `.` marker. `peek` and `pop` return `(T, P) | none` when empty. `take` returns `(T, P) | error`, reporting `COLLECTIONS_PRIORITY_QUEUE` when empty; use it when removal is required, as in `(string name, int priority) = .queue.take()`. `size` and `empty` are read-only. Heap push/pop operations take O(log n), while `peek` is O(1).
+The comparator runs only on equal priorities and must be pure, transitive and consistent for the queue's lifetime. `push`, `pop`, `take`, and `clear` mutate the receiver and require Quidra's `.` marker. `peek` and `pop` return `(T, P) | none` when empty. `take` returns `(T, P) | error`, reporting `COLLECTIONS_PRIORITY_QUEUE` when empty; use it when removal is required, as in `(string name, int priority) := .queue.take()`. `size` and `empty` are read-only. Heap push/pop operations take O(log n), while `peek` is O(1).
 
 The comparator is fixed at construction; `tie_before` cannot be reassigned after items have been inserted.
 
@@ -60,10 +60,10 @@ The comparator is fixed at construction; `tie_before` cannot be reassigned after
 ```quidra
 import collections
 
-int[] values = [7, 3, 7, 2, 3]
-distinct<int> members = collections.to_distinct(values)
-int[] first_occurrences = collections.unique(values)
-nat position = collections.index(values, 3)
+int[] values := [7, 3, 7, 2, 3]
+distinct<int> members := collections.to_distinct(values)
+int[] first_occurrences := collections.unique(values)
+nat position := collections.index(values, 3)
 ```
 
 `to_distinct<T>(T[]) -> distinct<T>` builds a native distinct container in first-appearance order. `unique<T>(T[]) -> T[]` returns those values as an array, without sorting. Both accept the native key domain: integers, naturals, bool, string, and recursively composed tuples of these types. Empty input produces an empty result. Returned values have independent value semantics; changing a returned set or array does not change the input.
@@ -81,8 +81,8 @@ returns `none` for an absent value or empty input. It is also available as
 ```quidra
 import collections
 
-int[] distances = [1, 7, 2, 2]
-nat | none selected = distances.argmin(where = [false, true, true, true])
+int[] distances := [1, 7, 2, 2]
+nat | none selected := distances.argmin(where = [false, true, true, true])
 ```
 
 `argmin<T:integer>(T[] values, bool[] where) -> nat | none | error` returns the zero-based index of the smallest selected value. Only entries with a true mask value are eligible. Equal minima keep the first eligible index, so the example returns 2. An empty selection returns `none`. Unequal array lengths return `COLLECTIONS_LENGTH`. It scans once in input order, supports all integer types, and leaves both arrays unchanged.
@@ -92,11 +92,11 @@ nat | none selected = distances.argmin(where = [false, true, true, true])
 ```quidra
 import collections
 
-string[] recent = ["older"]
+string[] recent := ["older"]
 .recent.push("newest")
-string newest = .recent.take()
+string newest := .recent.take()
 .recent.insert(0, "first")
-bool removed = .recent.remove("older")
+bool removed := .recent.remove("older")
 ```
 
 These functions provide writable array extension syntax after importing Collections. The ordinary function form takes an explicit reference, for example `collections.push(&recent, "next")`.
@@ -117,8 +117,8 @@ The receiver must be a writable, runtime-sized array. Each successful operation 
 ```quidra
 import collections
 
-int[] values = [1, 2, 3, 4, 5]
-int[][] groups = values.chunks(2)
+int[] values := [1, 2, 3, 4, 5]
+int[][] groups := values.chunks(2)
 ```
 
 `chunks<T>(T[], nat size) -> T[][] | error` divides an array into consecutive groups of at most `size` elements. It preserves order, retains a shorter final group and returns no groups for empty input. A zero size reports `COLLECTIONS_SIZE`, including for empty input. Input and returned groups have independent value semantics. The function is also available as `collections.chunks(values, size)`.
@@ -126,9 +126,9 @@ int[][] groups = values.chunks(2)
 ## Grouping aligned arrays
 
 ```quidra
-string[] keys = ["b", "a", "b"]
-int[] values = [7, 3, 2]
-auto grouped = collections.group_by(keys, values)
+string[] keys := ["b", "a", "b"]
+int[] values := [7, 3, 2]
+grouped := collections.group_by(keys, values)
 ```
 
 `group_by<K,V>(K[], V[]) -> map<K,V[]> | error` groups each aligned value under its key. Keys retain first-appearance order, and each group's values retain input order, including duplicates. Unequal lengths report `COLLECTIONS_LENGTH`; equal empty arrays produce an empty map. Keys follow the native map key restrictions. Neither input is mutated, and the returned groups are independent values.
@@ -136,12 +136,12 @@ auto grouped = collections.group_by(keys, values)
 ## Frequencies and grouped sums
 
 ```quidra
-string[] words = ["apple", "banana", "apple"]
-map<string, nat> counts = collections.frequencies(words)
+string[] words := ["apple", "banana", "apple"]
+map<string, nat> counts := collections.frequencies(words)
 
-string[] regions = ["north", "south", "north"]
-int[] amounts = [10, 5, 8]
-auto totals = collections.group_sum<string, int>(regions, amounts)
+string[] regions := ["north", "south", "north"]
+int[] amounts := [10, 5, 8]
+totals := collections.group_sum<string, int>(regions, amounts)
 ```
 
 `frequencies<T>(T[]) -> map<T,nat>` counts keys, retaining first appearance. `group_sum<K,V:integer>(K[], V[]) -> map<K,V> | error` combines aligned keys and integer values into per-key sums, preserving first key appearance. Unequal lengths report `COLLECTIONS_LENGTH`; arithmetic retains the value type's overflow checks. Only supported map key types may be used. Input arrays are never mutated.
@@ -149,7 +149,7 @@ auto totals = collections.group_sum<string, int>(regions, amounts)
 ## Consecutive runs
 
 ```quidra
-auto grouped = collections.runs([1, 1, 2, 1])
+grouped := collections.runs([1, 1, 2, 1])
 ```
 
 `runs<T:equatable>(T[]) -> (T,nat)[]` groups consecutive equal values without merging non-adjacent groups. Empty input yields an empty result.
@@ -157,20 +157,20 @@ auto grouped = collections.runs([1, 1, 2, 1])
 ## Lexicographic array comparison
 
 ```quidra
-int[] left = [1, 2]
-int[] right = [1, 3]
-int order = collections.lex_compare(left, right)
+int[] left := [1, 2]
+int[] right := [1, 3]
+int order := collections.lex_compare(left, right)
 ```
 
 `lex_compare<T:ordered>(T[], T[]) -> int` returns -1, 0 or 1. It compares corresponding values in order, then breaks common-prefix ties by array length. It does not mutate either array.
 
-`lex_order<T:ordered>(T[][] keys, descending=false) -> nat[]` returns indices in stable lexicographic order of variable-length key arrays. Equal keys preserve their original order; descending reverses comparisons, not equal-key order. Its current implementation uses O(n²) insertion sorting, making it appropriate for small lists rather than very large datasets.
+`lex_order<T:ordered>(T[][] keys, bool descending := false) -> nat[]` returns indices in stable lexicographic order of variable-length key arrays. Equal keys preserve their original order; descending reverses comparisons, not equal-key order. Its current implementation uses O(n²) insertion sorting, making it appropriate for small lists rather than very large datasets.
 
 ## Map entries and sorting records
 
 `entries<K,V>(map<K,V>) -> (K,V)[]` pairs each key with its value in map insertion order. The result has independent value semantics.
 
-`sorted_by<T,K>(T[], const func<K>(T), descending = false) -> T[]` applies a capture-free key function once per record and returns a stable sorted copy. Equal keys keep their input order in both directions. Key types follow Core array sorting and include integers, fixed-width floating-point numbers, bool and string. Use a typed function value or explicit type arguments when calling it.
+`sorted_by<T,K>(extend T[] values, const func<K>(T) key, bool descending := false) -> T[]` applies a capture-free key function once per record and returns a stable sorted copy. Equal keys keep their input order in both directions. Key types follow Core array sorting and include integers, fixed-width floating-point numbers, bool and string. Use a typed function value or explicit type arguments when calling it.
 
 ```quidra
 class Result(string name, int points)
@@ -178,9 +178,9 @@ class Result(string name, int points)
 int points_of(Result result)
     return result.points
 
-Result[] results = [Result("Aki", 5), Result("Yui", 8)]
-func<int>(Result) key = points_of
-auto ranked = collections.sorted_by(results, key, descending = true)
+Result[] results := [Result("Aki", 5), Result("Yui", 8)]
+func<int>(Result) key := points_of
+ranked := collections.sorted_by(results, key, descending = true)
 ```
 
 Use Core's `sorted(by = (...), descending = (...))` when sorting by several aligned key arrays with separate directions.
@@ -193,7 +193,7 @@ An empty map produces an empty array.
 
 ## Compound sort keys
 
-`sorted_by_pair<T,K,L>(T[], const func<(K,L)>(T), descending = (false, false))`
+`sorted_by_pair<T,K,L>(extend T[] values, const func<(K,L)>(T) key, (bool, bool) descending := (false, false))`
 returns a stable sorted copy. The capture-free key function runs once per
 element. The primary key orders first and the secondary key breaks ties.
 Each key uses the same scalar ordering as Core array sorting. The direction
@@ -202,14 +202,14 @@ tuple controls the two keys independently. The method is also available as
 
 ## Adjacency lists
 
-`adjacency_lists(vertices, edges, undirected = false)` takes a vertex count
+`adjacency_lists(nat vertices, (int, int)[] edges, bool undirected := false)` takes a vertex count
 and an array of integer pairs. It returns one sorted neighbor array per vertex,
 including isolated vertices. Directed edges go from the first vertex to the
 second. Undirected edges add both directions, with one entry per self-loop.
 Repeated edges remain repeated. An endpoint outside the zero-based range
 reports `COLLECTIONS_VERTEX`.
 
-`weighted_adjacency_lists(vertices, edges, undirected = false)` takes
+`weighted_adjacency_lists(nat vertices, (int, int, int)[] edges, bool undirected := false)` takes
 `(source, target, weight)` integer triples and returns `(neighbor, weight)`
 pairs in each row. It uses the same endpoint and direction rules. Rows are
 ordered by neighbor, with parallel edges retaining their input order.
@@ -227,7 +227,7 @@ endpoints report `COLLECTIONS_VERTEX`.
 ## Binary node storage
 
 `BinaryNodes<T>()` owns records with a value and optional left and right
-`NodeId` links. `.add(value, left = none, right = none)` returns a handle.
+`NodeId` links. `.add(T value, NodeId | none left := none, NodeId | none right := none)` returns a handle.
 `get(id)` returns a value copy and `.set(id, node)` replaces a record.
 `present(id)` distinguishes a handle from `none`. Handles are positions
 relative to their originating store and can be used with a value copy of that

@@ -12,10 +12,10 @@ nat | error index<T: equatable>(extend T[] values, T needle)
             return error("value is absent from the array", code = "COLLECTIONS_INDEX")
 
 nat | none | error argmin<T: integer>(extend T[] values, bool[] where)
-    nat size = len(values)
+    nat size := len(values)
     if len(where) != size
         return error("values and selection mask must have the same length", code = "COLLECTIONS_LENGTH")
-    nat best = size
+    nat best := size
     for nat i < size
         if where[i] and (best == size or values[i] < values[best])
             best = i
@@ -27,8 +27,8 @@ void push<T>(extend T[] &values, T value)
     values = values.append(value)
 
 private T remove_last<T>(T[] &values)
-    nat last = len(values) - 1
-    T value = values[last]
+    nat last := len(values) - 1
+    T value := values[last]
     values = values[:<last]
     return value
 
@@ -47,7 +47,7 @@ T | error remove_at<T>(extend T[] &values, nat index)
         return error("removal index exceeds the array length", code = "COLLECTIONS_INDEX")
     if index + 1 == len(values)
         return remove_last(&values)
-    T value = values[index]
+    T value := values[index]
     values = values[:<index].concat(values[index + 1:])
     return value
 
@@ -71,22 +71,22 @@ void | error insert<T>(extend T[] &values, nat index, T value)
 T[][] | error chunks<T>(extend T[] values, nat size)
     if size == 0
         return error("chunk size must be positive", code = "COLLECTIONS_SIZE")
-    T[][] result = []
-    nat start = 0
+    T[][] result := []
+    nat start := 0
     while start < len(values)
-        nat remaining = len(values) - start
-        nat count = if size < remaining then size else remaining
-        nat end = start + count
+        nat remaining := len(values) - start
+        nat count := if size < remaining then size else remaining
+        nat end := start + count
         result = result.append(values[start:<end])
         start = end
     return result
 
 private class HeapEntry<T, P>(T value, P priority, nat insertion)
 
-class PriorityQueue<T, P: ordered>(const func<bool>(T, T) | none tie_before = none)
-    private HeapEntry<T, P>[] entries = []
-    private nat active = 0
-    private nat next_insertion = 0
+class PriorityQueue<T, P: ordered>(const func<bool>(T, T) | none tie_before := none)
+    private HeapEntry<T, P>[] entries := []
+    private nat active := 0
+    private nat next_insertion := 0
 
     private bool precedes(nat left, nat right)
         if entries[left].priority < entries[right].priority
@@ -100,7 +100,7 @@ class PriorityQueue<T, P: ordered>(const func<bool>(T, T) | none tie_before = no
                 if compare(entries[right].value, entries[left].value)
                     return false
             none
-                bool unused = false
+                bool unused := false
         return entries[left].insertion < entries[right].insertion
 
     nat size()
@@ -115,19 +115,19 @@ class PriorityQueue<T, P: ordered>(const func<bool>(T, T) | none tie_before = no
         return (entries[0].value, entries[0].priority)
 
     void .push(T value, P priority)
-        HeapEntry<T, P> entry = HeapEntry<T, P>(value, priority, next_insertion)
+        HeapEntry<T, P> entry := HeapEntry<T, P>(value, priority, next_insertion)
         next_insertion += 1
         if active < len(entries)
             entries[active] = entry
         else
             entries = entries.append(entry)
         active += 1
-        nat index = active - 1
+        nat index := active - 1
         while index > 0
-            nat parent = (index - 1) / 2
+            nat parent := (index - 1) / 2
             if not precedes(index, parent)
                 break
-            HeapEntry<T, P> previous = entries[index]
+            HeapEntry<T, P> previous := entries[index]
             entries[index] = entries[parent]
             entries[parent] = previous
             index = parent
@@ -135,24 +135,24 @@ class PriorityQueue<T, P: ordered>(const func<bool>(T, T) | none tie_before = no
     private (T, P) | none .remove_first()
         if active == 0
             return none
-        HeapEntry<T, P> first = entries[0]
+        HeapEntry<T, P> first := entries[0]
         active -= 1
         if active == 0
             entries = []
             return (first.value, first.priority)
         entries[0] = entries[active]
-        nat index = 0
+        nat index := 0
         while true
-            nat left = 2 * index + 1
+            nat left := 2 * index + 1
             if left >= active
                 break
-            nat best = left
-            nat right = left + 1
+            nat best := left
+            nat right := left + 1
             if right < active and precedes(right, left)
                 best = right
             if not precedes(best, index)
                 break
-            HeapEntry<T, P> previous = entries[index]
+            HeapEntry<T, P> previous := entries[index]
             entries[index] = entries[best]
             entries[best] = previous
             index = best
@@ -176,13 +176,13 @@ class PriorityQueue<T, P: ordered>(const func<bool>(T, T) | none tie_before = no
 
 map<T, nat> frequencies<T>(extend T[] values)
     map<T, nat> counts
-    for T value = values[]
+    for T value := values[]
         .counts.increment(value)
     return counts
 
 distinct<T> to_distinct<T>(extend T[] values)
     distinct<T> result
-    for T value = values[]
+    for T value := values[]
         .result.add(value)
     return result
 
@@ -210,11 +210,11 @@ map<K, V> | error group_sum<K, V: integer>(K[] keys, V[] values)
     return grouped
 
 (T, nat)[] runs<T: equatable>(T[] values)
-    (T, nat)[] result = []
+    (T, nat)[] result := []
     if len(values) == 0
         return result
-    T current = values[0]
-    nat count = 1
+    T current := values[0]
+    nat count := 1
     for 1 <= nat i < len(values)
         if values[i] == current
             count += 1
@@ -225,7 +225,7 @@ map<K, V> | error group_sum<K, V: integer>(K[] keys, V[] values)
     return result.append((current, count))
 
 int lex_compare<T: ordered>(T[] left, T[] right)
-    nat common = if len(left) < len(right) then len(left) else len(right)
+    nat common := if len(left) < len(right) then len(left) else len(right)
     for nat i < common
         if left[i] < right[i]
             return -1
@@ -237,13 +237,13 @@ int lex_compare<T: ordered>(T[] left, T[] right)
         return 1
     return 0
 
-nat[] lex_order<T: ordered>(T[][] keys, bool descending = false)
-    nat[] order = keys.indices()
+nat[] lex_order<T: ordered>(T[][] keys, bool descending := false)
+    nat[] order := keys.indices()
     for 1 <= nat i < len(order)
-        nat current = order[i]
-        nat j = i
+        nat current := order[i]
+        nat j := i
         while j > 0
-            int comparison = lex_compare(keys[current], keys[order[j - 1]])
+            int comparison := lex_compare(keys[current], keys[order[j - 1]])
             if (not descending and comparison >= 0) or (descending and comparison <= 0)
                 break
             order[j] = order[j - 1]
@@ -251,9 +251,9 @@ nat[] lex_order<T: ordered>(T[][] keys, bool descending = false)
         order[j] = current
     return order
 
-class Queue<T>(local T[] initial = [])
-    private T[] values = initial
-    private nat head = 0
+class Queue<T>(local T[] initial := [])
+    private T[] values := initial
+    private nat head := 0
 
     nat size()
         return len(values) - head
@@ -265,7 +265,7 @@ class Queue<T>(local T[] initial = [])
         values = values.append(value)
 
     private T .remove_first()
-        T value = values[head]
+        T value := values[head]
         head += 1
         if head == len(values)
             values = []
@@ -286,15 +286,15 @@ class Queue<T>(local T[] initial = [])
         return .remove_first()
 
 (K, V)[] entries<K, V>(extend map<K, V> source)
-    K[] keys = source.keys()
-    V[] values = source.values()
-    (K, V)[] result = []
+    K[] keys := source.keys()
+    V[] values := source.values()
+    (K, V)[] result := []
     for nat i < len(keys)
         result = result.append((keys[i], values[i]))
     return result
 
-T[] sorted_by<T, K>(extend T[] values, const func<K>(T) key, bool descending = false)
-    K[] keys = [for T value = values[] then key(value)]
+T[] sorted_by<T, K>(extend T[] values, const func<K>(T) key, bool descending := false)
+    K[] keys := [for T value := values[] then key(value)]
     return values.sorted(by = keys, descending = descending)
 
 (K, V)[] sorted_entries<K, V>(map<K, V> source)
@@ -303,11 +303,11 @@ T[] sorted_by<T, K>(extend T[] values, const func<K>(T) key, bool descending = f
 (K, V)[] ranked_entries<K, V>(map<K, V> source)
     return entries(source).sorted(by = (source.values(), source.keys()), descending = (true, false))
 
-T[] sorted_by_pair<T, K, L>(extend T[] values, const func<(K, L)>(T) key, (bool, bool) descending = (false, false))
-    K[] first = []
-    L[] second = []
-    for T value = values[]
-        (K primary, L secondary) = key(value)
+T[] sorted_by_pair<T, K, L>(extend T[] values, const func<(K, L)>(T) key, (bool, bool) descending := (false, false))
+    K[] first := []
+    L[] second := []
+    for T value := values[]
+        (K primary, L secondary) := key(value)
         first = first.append(primary)
         second = second.append(secondary)
     return values.sorted(by = (first, second), descending = descending)
@@ -315,37 +315,37 @@ T[] sorted_by_pair<T, K, L>(extend T[] values, const func<(K, L)>(T) key, (bool,
 private bool valid_vertex(int vertex, nat vertices)
     if vertex < 0
         return false
-    nat index = nat(vertex)
+    nat index := nat(vertex)
     return index < vertices
 
-int[][] | error adjacency_lists(nat vertices, (int, int)[] edges, bool undirected = false)
-    int[] empty = []
-    int[][] neighbors = array(vertices, fill = empty)
-    for (int source, int target) = edges[]
+int[][] | error adjacency_lists(nat vertices, (int, int)[] edges, bool undirected := false)
+    int[] empty := []
+    int[][] neighbors := array(vertices, fill = empty)
+    for (int source, int target) := edges[]
         if not valid_vertex(source, vertices) or not valid_vertex(target, vertices)
             return error("edge endpoint is outside the graph", code = "COLLECTIONS_VERTEX")
-        nat from = nat(source)
-        nat to = nat(target)
+        nat from := nat(source)
+        nat to := nat(target)
         neighbors[from] = neighbors[from].append(target)
         if undirected and from != to
             neighbors[to] = neighbors[to].append(source)
-    return [for int[] row = neighbors[] then row.sorted()]
+    return [for int[] row := neighbors[] then row.sorted()]
 
-(int, int)[][] | error weighted_adjacency_lists(nat vertices, (int, int, int)[] edges, bool undirected = false)
-    (int, int)[] empty = []
-    (int, int)[][] neighbors = array(vertices, fill = empty)
-    for (int source, int target, int weight) = edges[]
+(int, int)[][] | error weighted_adjacency_lists(nat vertices, (int, int, int)[] edges, bool undirected := false)
+    (int, int)[] empty := []
+    (int, int)[][] neighbors := array(vertices, fill = empty)
+    for (int source, int target, int weight) := edges[]
         if not valid_vertex(source, vertices) or not valid_vertex(target, vertices)
             return error("edge endpoint is outside the graph", code = "COLLECTIONS_VERTEX")
-        nat from = nat(source)
-        nat to = nat(target)
+        nat from := nat(source)
+        nat to := nat(target)
         neighbors[from] = neighbors[from].append((target, weight))
         if undirected and from != to
             neighbors[to] = neighbors[to].append((source, weight))
     for nat vertex < vertices
-        (int, int)[] row = neighbors[vertex]
-        int[] targets = []
-        for (int target, _) = row[]
+        (int, int)[] row := neighbors[vertex]
+        int[] targets := []
+        for (int target, _) := row[]
             targets = targets.append(target)
         neighbors[vertex] = row.sorted(by = targets)
     return neighbors
@@ -365,18 +365,18 @@ private nat vertex_position<K>(map<K, nat> positions, K label, nat absent)
             return absent
 
 DirectedGraph | error directed_graph<K>(K[] vertices, (K, K)[] edges)
-    nat size = len(vertices)
+    nat size := len(vertices)
     map<K, nat> positions
-    for K label = vertices[nat i]
+    for K label := vertices[nat i]
         if positions.has(label)
             return error("directed graph has a duplicate vertex label", code = "COLLECTIONS_VERTEX")
         .positions.set(label, i)
-    nat[] empty = []
-    nat[][] outgoing = array(size, fill = empty)
-    int[] incoming = array(size, fill = 0)
-    for (K source, K target) = edges[]
-        nat from = vertex_position(positions, source, size)
-        nat to = vertex_position(positions, target, size)
+    nat[] empty := []
+    nat[][] outgoing := array(size, fill = empty)
+    int[] incoming := array(size, fill = 0)
+    for (K source, K target) := edges[]
+        nat from := vertex_position(positions, source, size)
+        nat to := vertex_position(positions, target, size)
         if from == size or to == size
             return error("directed edge references an unknown vertex", code = "COLLECTIONS_VERTEX")
         outgoing[from] = outgoing[from].append(to)
@@ -385,13 +385,13 @@ DirectedGraph | error directed_graph<K>(K[] vertices, (K, K)[] edges)
 
 class NodeId(const nat slot)
 
-class BinaryNode<T>(T value, NodeId | none left = none, NodeId | none right = none)
+class BinaryNode<T>(T value, NodeId | none left := none, NodeId | none right := none)
 
 class BinaryNodes<T>()
-    private BinaryNode<T>[] nodes = []
+    private BinaryNode<T>[] nodes := []
 
-    NodeId .add(T value, NodeId | none left = none, NodeId | none right = none)
-        NodeId id = NodeId(len(nodes))
+    NodeId .add(T value, NodeId | none left := none, NodeId | none right := none)
+        NodeId id := NodeId(len(nodes))
         nodes = nodes.append(BinaryNode<T>(value, left, right))
         return id
 
@@ -418,9 +418,9 @@ class BinaryNodes<T>()
         return void
 
     NodeId | error leftmost(NodeId id)
-        NodeId current = id
+        NodeId current := id
         for nat step < len(nodes)
-            auto node = get(current)
+            node := get(current)
             match node.left
                 NodeId child
                     current = child
@@ -429,10 +429,10 @@ class BinaryNodes<T>()
         return error("invalid left-child chain", code = "COLLECTIONS_NODE")
 
     (T, NodeId | none) | error .detach_leftmost(NodeId root)
-        NodeId | none parent_id = none
-        NodeId current = root
+        NodeId | none parent_id := none
+        NodeId current := root
         for nat step < len(nodes)
-            auto node = try get(current)
+            node := try get(current)
             match node.left
                 NodeId child
                     parent_id = current
@@ -440,10 +440,10 @@ class BinaryNodes<T>()
                 none
                     match parent_id
                         NodeId parent
-                            auto record = try get(parent)
+                            record := try get(parent)
                             record.left = node.right
                             try .set(parent, record)
-                            NodeId | none remaining = root
+                            NodeId | none remaining := root
                             return (node.value, remaining)
                         none
                             return (node.value, node.right)
@@ -454,9 +454,9 @@ class BinaryNodes<T>()
             none
                 return 0
             NodeId
-                auto node = get(id)
-                nat left = height(node.left)
-                nat right = height(node.right)
+                node := get(id)
+                nat left := height(node.left)
+                nat right := height(node.right)
                 return 1 + (if left > right then left else right)
 
     private void walk(NodeId | none id, string order, T[] &result)
@@ -464,7 +464,7 @@ class BinaryNodes<T>()
             none
                 return
             NodeId
-                auto node = get(id)
+                node := get(id)
                 if order == "preorder"
                     result = result.append(node.value)
                 walk(node.left, order, &result)
@@ -477,7 +477,7 @@ class BinaryNodes<T>()
     T[] | error traverse(NodeId | none root, string order)
         if order != "preorder" and order != "inorder" and order != "postorder"
             return error("invalid depth-first order", code = "COLLECTIONS_ORDER")
-        T[] result = []
+        T[] result := []
         walk(root, order, &result)
         return result
 
@@ -489,13 +489,13 @@ class BinaryNodes<T>()
                 return
 
     T[] | error levelorder(NodeId | none root)
-        T[] result = []
-        Queue<NodeId> queue()
+        T[] result := []
+        Queue<NodeId> queue := Queue<NodeId>()
         enqueue(&queue, root)
         while not queue.empty()
             if len(result) == len(nodes)
                 return error("level-order walk exceeds the number of stored nodes", code = "COLLECTIONS_NODE")
-            auto node = get(.queue.take())
+            node := get(.queue.take())
             result = result.append(node.value)
             enqueue(&queue, node.left)
             enqueue(&queue, node.right)

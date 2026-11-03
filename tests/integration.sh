@@ -107,7 +107,7 @@ diff -u "$TMP/chunks-expected" "$TMP/chunks-output"
 
 cat > "$TMP/mutate-comparator.qui" <<'QUI'
 import collections
-auto queue = collections.PriorityQueue<string, int>()
+queue := collections.PriorityQueue<string, int>()
 .queue.push("item", 1)
 queue.tie_before = none
 QUI
