@@ -111,3 +111,14 @@ if "$QUIDRA" check "$TMP/mutate-comparator.qui" > "$TMP/immutable-error" 2>&1; t
 fi
 grep -Eqi 'const|read.only|immutable' "$TMP/immutable-error"
 
+
+"$QUIDRA" run "$ROOT/tests/argmin.qui" > "$TMP/argmin-output"
+cat > "$TMP/argmin-expected" <<'EXPECTED'
+first-tie=2
+masked=1
+all-false=none
+empty=none
+mismatch=COLLECTIONS_LENGTH
+unsigned=1
+EXPECTED
+diff -u "$TMP/argmin-expected" "$TMP/argmin-output"

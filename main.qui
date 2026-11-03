@@ -4,6 +4,18 @@ nat | error index<T: equatable>(extend T[] values, T needle)
             return i
     return error("value is absent from the array", code = "COLLECTIONS_INDEX")
 
+nat | none | error argmin<T: integer>(extend T[] values, bool[] where)
+    nat size = len(values)
+    if len(where) != size
+        return error("values and selection mask must have the same length", code = "COLLECTIONS_LENGTH")
+    nat best = size
+    for nat i < size
+        if where[i] and (best == size or values[i] < values[best])
+            best = i
+    if best == size
+        return none
+    return best
+
 void push<T>(extend T[] &values, T value)
     values = values.append(value)
 

@@ -1,0 +1,20 @@
+import collections
+
+void show(string label, nat | none | error result)
+    match result
+        nat index
+            print.line("{label}={index}")
+        none
+            print.line("{label}=none")
+        error problem
+            print.line("{label}={problem.code}")
+
+int[] distances = [-3, 7, 2, 2, 9]
+show("first-tie", collections.argmin(distances, where = [false, true, true, true, true]))
+show("masked", distances.argmin(where = [false, true, false, false, true]))
+show("all-false", distances.argmin(where = [false, false, false, false, false]))
+int[] empty = []
+show("empty", empty.argmin(where = []))
+show("mismatch", distances.argmin(where = [true]))
+nat[] unsigned = [9, 0]
+show("unsigned", unsigned.argmin(where = [true, true]))

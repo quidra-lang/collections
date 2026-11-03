@@ -72,6 +72,17 @@ nat position = collections.index(values, 3)
 
 These three functions also support array extension syntax after `import collections`: `values.to_distinct()`, `values.unique()`, and `values.index(3)`.
 
+## Minimum index under a mask
+
+```quidra
+import collections
+
+int[] distances = [1, 7, 2, 2]
+nat | none selected = distances.argmin(where = [false, true, true, true])
+```
+
+`argmin<T:integer>(T[] values, bool[] where) -> nat | none | error` returns the zero-based index of the smallest selected value. Only entries with a true mask value are eligible. Equal minima keep the first eligible index, so the example returns 2. An empty selection returns `none`. Unequal array lengths return `COLLECTIONS_LENGTH`. It scans once in input order, supports all integer types, and leaves both arrays unchanged.
+
 ## Mutable array operations
 
 ```quidra
