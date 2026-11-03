@@ -171,8 +171,8 @@ Use Core's `sorted(by = (...), descending = (...))` when sorting by several alig
 
 After `import collections`, `collections.sorted_entries(source)` returns entries in
 ascending key order. `collections.ranked_entries(source)` orders them by descending
-value and breaks ties by ascending key. Both require ordered keys, and
-`ranked_entries()` also requires ordered values. The source remains unchanged.
+value and breaks ties by ascending key. The keys and ranking values must be supported by Core array sorting,
+including strings. The source remains unchanged.
 An empty map produces an empty array.
 
 ## Testing

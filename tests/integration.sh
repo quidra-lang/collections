@@ -52,6 +52,8 @@ ranked=a:3
 ranked=z:3
 ranked=b:1
 empty-ranked=0
+sorted-group=a:first
+sorted-group=z:last
 EXPECTED
 diff -u "$TMP/utilities-expected" "$TMP/utilities-output"
 

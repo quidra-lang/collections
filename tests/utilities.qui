@@ -139,3 +139,10 @@ for (string label, int amount) = collections.ranked_entries(totals)[]
     print.line("ranked={label}:{amount}")
 map<string, int> empty_totals
 print.line("empty-ranked={len(collections.ranked_entries(empty_totals))}")
+
+map<string, string[]> groups_for_sort
+.groups_for_sort.set("z", ["last"])
+.groups_for_sort.set("a", ["first"])
+auto sorted_groups = collections.sorted_entries(groups_for_sort)
+for (string group_key, string[] group_items) = sorted_groups[]
+    print.line("sorted-group={group_key}:{group_items.join(",")}")
