@@ -45,6 +45,13 @@ entry=first:1
 queue-drained=COLLECTIONS_QUEUE
 queue-seeded=7:9
 queue-union=union
+sorted=a:3
+sorted=b:1
+sorted=z:3
+ranked=a:3
+ranked=z:3
+ranked=b:1
+empty-ranked=0
 EXPECTED
 diff -u "$TMP/utilities-expected" "$TMP/utilities-output"
 

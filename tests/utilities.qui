@@ -128,3 +128,14 @@ match .mixed.take()
         print.line("queue-union={value}")
     error failure
         print.line("unexpected={failure.code}")
+
+map<string, int> totals
+.totals.set("z", 3)
+.totals.set("b", 1)
+.totals.set("a", 3)
+for (string label, int amount) = totals.sorted_entries()[]
+    print.line("sorted={label}:{amount}")
+for (string label, int amount) = totals.ranked_entries()[]
+    print.line("ranked={label}:{amount}")
+map<string, int> empty_totals
+print.line("empty-ranked={len(empty_totals.ranked_entries())}")

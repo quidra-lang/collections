@@ -169,6 +169,12 @@ auto ranked = collections.sorted_by(results, key, descending = true)
 
 Use Core's `sorted(by = (...), descending = (...))` when sorting by several aligned key arrays with separate directions.
 
+After `import collections`, `source.sorted_entries()` returns entries in
+ascending key order. `source.ranked_entries()` orders them by descending
+value and breaks ties by ascending key. Both require ordered keys, and
+`ranked_entries()` also requires ordered values. The source remains unchanged.
+An empty map produces an empty array.
+
 ## Testing
 
 Run `bash tests/integration.sh /path/to/quidra` against the matching Core compiler.
