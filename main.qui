@@ -288,3 +288,124 @@ T[] sorted_by<T, K>(extend T[] values, const func<K>(T) key, bool descending = f
 
 (K, V)[] ranked_entries<K, V>(map<K, V> source)
     return entries(source).sorted(by = (source.values(), source.keys()), descending = (true, false))
+
+T[] sorted_by_pair<T, K, L>(extend T[] values, const func<(K, L)>(T) key, (bool, bool) descending = (false, false))
+    K[] first = []
+    L[] second = []
+    for T value = values[]
+        (K primary, L secondary) = key(value)
+        first = first.append(primary)
+        second = second.append(secondary)
+    return values.sorted(by = (first, second), descending = descending)
+
+int[][] | error adjacency_lists(nat vertices, (int, int)[] edges, bool undirected = false)
+    int[] empty = []
+    int[][] neighbors = array(vertices, fill = empty)
+    for (int source, int target) = edges[]
+        if source < 0 or target < 0
+            return error("edge endpoint is outside the graph", code = "COLLECTIONS_VERTEX")
+        nat from = nat(source)
+        nat to = nat(target)
+        if from >= vertices or to >= vertices
+            return error("edge endpoint is outside the graph", code = "COLLECTIONS_VERTEX")
+        neighbors[from] = neighbors[from].append(target)
+        if undirected and from != to
+            neighbors[to] = neighbors[to].append(source)
+    return [for int[] row = neighbors[] then row.sorted()]
+
+class NodeId(const nat slot)
+
+class BinaryNode<T>(T value, NodeId | none left = none, NodeId | none right = none)
+
+class BinaryNodes<T>()
+    private BinaryNode<T>[] nodes = []
+
+    NodeId .add(T value, NodeId | none left = none, NodeId | none right = none)
+        NodeId id = NodeId(len(nodes))
+        nodes = nodes.append(BinaryNode<T>(value, left, right))
+        return id
+
+    bool present(NodeId | none id)
+        match id
+            NodeId
+                return true
+            none
+                return false
+
+    BinaryNode<T> | error get(NodeId | none id)
+        match id
+            NodeId
+                if id.slot < len(nodes)
+                    return nodes[id.slot]
+            none
+                return error("no binary node at this position", code = "COLLECTIONS_NODE")
+        return error("no binary node at this position", code = "COLLECTIONS_NODE")
+
+    void | error .set(NodeId id, BinaryNode<T> node)
+        if id.slot >= len(nodes)
+            return error("no binary node at this position", code = "COLLECTIONS_NODE")
+        nodes[id.slot] = node
+        return void
+
+    NodeId | error leftmost(NodeId id)
+        NodeId current = id
+        for nat step < len(nodes)
+            auto node = get(current)
+            match node.left
+                NodeId child
+                    current = child
+                none
+                    return current
+        return error("invalid left-child chain", code = "COLLECTIONS_NODE")
+
+    nat height(NodeId | none id)
+        match id
+            none
+                return 0
+            NodeId
+                auto node = get(id)
+                nat left = height(node.left)
+                nat right = height(node.right)
+                return 1 + (if left > right then left else right)
+
+    private void walk(NodeId | none id, string order, T[] &result)
+        match id
+            none
+                return
+            NodeId
+                auto node = get(id)
+                if order == "preorder"
+                    result = result.append(node.value)
+                walk(node.left, order, &result)
+                if order == "inorder"
+                    result = result.append(node.value)
+                walk(node.right, order, &result)
+                if order == "postorder"
+                    result = result.append(node.value)
+
+    T[] | error traverse(NodeId | none root, string order)
+        if order != "preorder" and order != "inorder" and order != "postorder"
+            return error("invalid depth-first order", code = "COLLECTIONS_ORDER")
+        T[] result = []
+        walk(root, order, &result)
+        return result
+
+    private void enqueue(Queue<NodeId> &queue, NodeId | none id)
+        match id
+            NodeId
+                .queue.push(id)
+            none
+                return
+
+    T[] | error levelorder(NodeId | none root)
+        T[] result = []
+        Queue<NodeId> queue()
+        enqueue(&queue, root)
+        while not queue.empty()
+            if len(result) == len(nodes)
+                return error("level-order walk exceeds the number of stored nodes", code = "COLLECTIONS_NODE")
+            auto node = get(.queue.take())
+            result = result.append(node.value)
+            enqueue(&queue, node.left)
+            enqueue(&queue, node.right)
+        return result

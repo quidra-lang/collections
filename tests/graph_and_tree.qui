@@ -1,0 +1,48 @@
+import collections
+
+(int, int)[] edges = [(2, 0), (0, 1), (0, 0), (0, 1)]
+int[][] graph = collections.adjacency_lists(4, edges, undirected = true)
+print.line(graph == [[0, 1, 1, 2], [0, 0], [0], []])
+int[][] directed = collections.adjacency_lists(4, edges)
+print.line(directed == [[0, 1, 1], [], [0], []])
+match collections.adjacency_lists(2, [(-1, 0)])
+    error problem
+        print.line(problem.code)
+    int[][]
+        print.line("unexpected graph")
+
+class Record(string name, int score, int tie)
+(int, int) rank(Record record)
+    return (record.score, record.tie)
+
+Record[] records = [Record("first", 2, 1), Record("second", 1, 3), Record("third", 2, 1), Record("fourth", 2, 0)]
+func<(int, int)>(Record) key = rank
+auto sorted = records.sorted_by_pair(key, descending = (true, false))
+print.line([for Record record = sorted[] then record.name].join(":"))
+
+collections.BinaryNodes<int> nodes()
+auto leaf = .nodes.add(7)
+auto root = .nodes.add(5, right = leaf)
+auto copy = nodes
+.nodes.set(root, collections.BinaryNode<int>(8, left = leaf))
+auto original = copy.get(root)
+auto updated = nodes.get(root)
+auto child = nodes.get(updated.left)
+print.line("{original.value}:{updated.value}:{child.value}")
+match nodes.get(none)
+    error problem
+        print.line(problem.code)
+    collections.BinaryNode<int>
+        print.line("unexpected node")
+int[] preorder = nodes.traverse(root, "preorder")
+print.line(preorder == [int(8), 7])
+int[] inorder = nodes.traverse(root, "inorder")
+print.line(inorder == [int(7), 8])
+int[] postorder = nodes.traverse(root, "postorder")
+print.line(postorder == [int(7), 8])
+int[] levelorder = nodes.levelorder(root)
+print.line(levelorder == [int(8), 7])
+print.line("{nodes.height(root)}:{nodes.height(none)}")
+auto first = nodes.leftmost(root)
+auto first_node = nodes.get(first)
+print.line(first_node.value)

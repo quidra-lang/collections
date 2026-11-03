@@ -122,3 +122,20 @@ mismatch=COLLECTIONS_LENGTH
 unsigned=1
 EXPECTED
 diff -u "$TMP/argmin-expected" "$TMP/argmin-output"
+
+"$QUIDRA" run "$ROOT/tests/graph_and_tree.qui" > "$TMP/graph-and-tree-output"
+cat > "$TMP/graph-and-tree-expected" <<'EXPECTED'
+true
+true
+COLLECTIONS_VERTEX
+fourth:first:third:second
+5:8:7
+COLLECTIONS_NODE
+true
+true
+true
+true
+2:0
+7
+EXPECTED
+diff -u "$TMP/graph-and-tree-expected" "$TMP/graph-and-tree-output"

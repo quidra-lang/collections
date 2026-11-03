@@ -186,6 +186,42 @@ value and breaks ties by ascending key. The keys and ranking values must be supp
 including strings. The source remains unchanged.
 An empty map produces an empty array.
 
+## Compound sort keys
+
+`sorted_by_pair<T,K,L>(T[], const func<(K,L)>(T), descending = (false, false))`
+returns a stable sorted copy. The capture-free key function runs once per
+element. The primary key orders first and the secondary key breaks ties.
+Each key uses the same scalar ordering as Core array sorting. The direction
+tuple controls the two keys independently. The method is also available as
+`values.sorted_by_pair(key)`.
+
+## Adjacency lists
+
+`adjacency_lists(vertices, edges, undirected = false)` takes a vertex count
+and an array of integer pairs. It returns one sorted neighbor array per vertex,
+including isolated vertices. Directed edges go from the first vertex to the
+second. Undirected edges add both directions, with one entry per self-loop.
+Repeated edges remain repeated. An endpoint outside the zero-based range
+reports `COLLECTIONS_VERTEX`.
+
+## Binary node storage
+
+`BinaryNodes<T>()` owns records with a value and optional left and right
+`NodeId` links. `.add(value, left = none, right = none)` returns a handle.
+`get(id)` returns a value copy and `.set(id, node)` replaces a record.
+`present(id)` distinguishes a handle from `none`. Handles are positions
+relative to their originating store and can be used with a value copy of that
+store. Keep links within their store and maintain an acyclic tree with no
+shared subtrees. Unlinking a node preserves its handle and slot for the
+lifetime of the store.
+
+`leftmost(id)` follows left links until the terminal node. `height(root)`
+counts nodes on the longest root-to-leaf path. `traverse(root, order)` supports
+`"inorder"`, `"preorder"`, and `"postorder"`; `levelorder(root)` visits by
+depth, left to right. A missing root has height zero and produces empty
+traversals. An invalid traversal order reports `COLLECTIONS_ORDER`.
+`get(none)` and out-of-range record access report `COLLECTIONS_NODE`.
+
 ## Testing
 
 Run `bash tests/integration.sh /path/to/quidra` against the matching Core compiler.
