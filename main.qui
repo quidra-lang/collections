@@ -271,8 +271,8 @@ T[] sorted_by<T, K>(extend T[] values, const func<K>(T) key, bool descending = f
     K[] keys = [for T value = values[] then key(value)]
     return values.sorted(by = keys, descending = descending)
 
-(K, V)[] sorted_entries<K: ordered, V>(extend map<K, V> source)
+(K, V)[] sorted_entries<K: ordered, V>(map<K, V> source)
     return entries(source).sorted(by = source.keys())
 
-(K, V)[] ranked_entries<K: ordered, V: ordered>(extend map<K, V> source)
+(K, V)[] ranked_entries<K: ordered, V: ordered>(map<K, V> source)
     return entries(source).sorted(by = (source.values(), source.keys()), descending = (true, false))

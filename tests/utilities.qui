@@ -133,9 +133,9 @@ map<string, int> totals
 .totals.set("z", 3)
 .totals.set("b", 1)
 .totals.set("a", 3)
-for (string label, int amount) = totals.sorted_entries()[]
+for (string label, int amount) = collections.sorted_entries(totals)[]
     print.line("sorted={label}:{amount}")
-for (string label, int amount) = totals.ranked_entries()[]
+for (string label, int amount) = collections.ranked_entries(totals)[]
     print.line("ranked={label}:{amount}")
 map<string, int> empty_totals
-print.line("empty-ranked={len(empty_totals.ranked_entries())}")
+print.line("empty-ranked={len(collections.ranked_entries(empty_totals))}")
