@@ -66,3 +66,16 @@ match .queue.take()
         print.line("unexpected")
     error failure
         print.line("priority-empty={failure.code}")
+
+int[] positions = [9, 4, 9, 6]
+int removed_at = .positions.remove_at(2)
+print.line("remove-at={removed_at}:{positions == [int(9), 4, 6]}")
+match .positions.remove_at(3)
+    error problem
+        print.line("remove-at-error={problem.code}:{len(positions)}")
+    int
+        print.line("unexpected removal")
+int last_at = .positions.remove_at(2)
+int first_at = .positions.remove_at(0)
+int only_at = .positions.remove_at(0)
+print.line("remove-at-boundaries={last_at}:{first_at}:{only_at}:{len(positions)}")

@@ -1,8 +1,15 @@
-nat | error index<T: equatable>(extend T[] values, T needle)
+nat | none find_index<T: equatable>(extend T[] values, T needle)
     for nat i < len(values)
         if values[i] == needle
             return i
-    return error("value is absent from the array", code = "COLLECTIONS_INDEX")
+    return none
+
+nat | error index<T: equatable>(extend T[] values, T needle)
+    match find_index(values, needle)
+        nat position
+            return position
+        none
+            return error("value is absent from the array", code = "COLLECTIONS_INDEX")
 
 nat | none | error argmin<T: integer>(extend T[] values, bool[] where)
     nat size = len(values)
@@ -35,15 +42,22 @@ T | error take<T>(extend T[] &values)
         return error("cannot take from an empty array", code = "COLLECTIONS_EMPTY")
     return remove_last(&values)
 
+T | error remove_at<T>(extend T[] &values, nat index)
+    if index >= len(values)
+        return error("removal index exceeds the array length", code = "COLLECTIONS_INDEX")
+    if index + 1 == len(values)
+        return remove_last(&values)
+    T value = values[index]
+    values = values[:<index].concat(values[index + 1:])
+    return value
+
 bool remove<T: equatable>(extend T[] &values, T needle)
-    for nat i < len(values)
-        if values[i] == needle
-            if i + 1 == len(values)
-                values = values[:<i]
-            else
-                values = values[:<i].concat(values[i + 1:])
+    match find_index(values, needle)
+        nat position
+            remove_at(&values, position)
             return true
-    return false
+        none
+            return false
 
 void | error insert<T>(extend T[] &values, nat index, T value)
     if index > len(values)
@@ -335,6 +349,39 @@ int[][] | error adjacency_lists(nat vertices, (int, int)[] edges, bool undirecte
             targets = targets.append(target)
         neighbors[vertex] = row.sorted(by = targets)
     return neighbors
+
+class DirectedGraph(const nat[][] outgoing_rows, const int[] incoming_counts)
+    nat[] outgoing(nat vertex)
+        return outgoing_rows[vertex]
+
+    int[] indegrees()
+        return incoming_counts
+
+private nat vertex_position<K>(map<K, nat> positions, K label, nat absent)
+    match positions.get(label)
+        nat position
+            return position
+        none
+            return absent
+
+DirectedGraph | error directed_graph<K>(K[] vertices, (K, K)[] edges)
+    nat size = len(vertices)
+    map<K, nat> positions
+    for K label = vertices[nat i]
+        if positions.has(label)
+            return error("directed graph has a duplicate vertex label", code = "COLLECTIONS_VERTEX")
+        .positions.set(label, i)
+    nat[] empty = []
+    nat[][] outgoing = array(size, fill = empty)
+    int[] incoming = array(size, fill = 0)
+    for (K source, K target) = edges[]
+        nat from = vertex_position(positions, source, size)
+        nat to = vertex_position(positions, target, size)
+        if from == size or to == size
+            return error("directed edge references an unknown vertex", code = "COLLECTIONS_VERTEX")
+        outgoing[from] = outgoing[from].append(to)
+        incoming[to] += 1
+    return DirectedGraph(outgoing, incoming)
 
 class NodeId(const nat slot)
 

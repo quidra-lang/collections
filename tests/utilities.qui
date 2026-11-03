@@ -146,3 +146,17 @@ map<string, string[]> groups_for_sort
 auto sorted_groups = collections.sorted_entries(groups_for_sort)
 for (string group_key, string[] group_items) = sorted_groups[]
     print.line("sorted-group={group_key}:{group_items.join(",")}")
+
+int[] search_values = [7, 3, 7]
+match search_values.find_index(7)
+    nat position
+        print.line("found={position}")
+    none
+        print.line("unexpected miss")
+int[] no_search_values = []
+for int[] input = [search_values, no_search_values][]
+    match input.find_index(5)
+        nat position
+            print.line("unexpected index {position}")
+        none
+            print.line("absent")

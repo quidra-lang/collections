@@ -54,6 +54,9 @@ ranked=b:1
 empty-ranked=0
 sorted-group=a:first
 sorted-group=z:last
+found=0
+absent
+absent
 EXPECTED
 diff -u "$TMP/utilities-expected" "$TMP/utilities-output"
 
@@ -83,6 +86,9 @@ priority-take=second:1
 priority-take=later:3
 priority-copy=3
 priority-empty=COLLECTIONS_PRIORITY_QUEUE
+remove-at=9:true
+remove-at-error=COLLECTIONS_INDEX:3
+remove-at-boundaries=6:9:4:0
 EXPECTED
 diff -u "$TMP/array-mutation-expected" "$TMP/array-mutation-output"
 
@@ -143,5 +149,11 @@ true
 31:39:34
 31:34
 COLLECTIONS_NODE
+true
+true
+true
+COLLECTIONS_VERTEX
+COLLECTIONS_VERTEX
+COLLECTIONS_VERTEX
 EXPECTED
 diff -u "$TMP/graph-and-tree-expected" "$TMP/graph-and-tree-output"

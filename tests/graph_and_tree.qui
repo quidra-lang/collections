@@ -74,3 +74,33 @@ match .successor_tree.detach_leftmost(collections.NodeId(100))
         print.line(problem.code)
     (int, collections.NodeId | none)
         print.line("unexpected successor")
+
+string[] labels = ["z", "a", "isolated"]
+(string, string)[] labeled_edges = [("z", "a"), ("z", "z"), ("z", "a")]
+collections.DirectedGraph labeled = collections.directed_graph(labels, labeled_edges)
+nat[] outgoing = labeled.outgoing(0)
+int[] indegrees = labeled.indegrees()
+print.line(outgoing == [nat(1), 0, 1] and indegrees == [int(1), 2, 0])
+indegrees[1] = 0
+print.line(labeled.indegrees()[1] == 2 and len(labeled.outgoing(2)) == 0)
+(int, int)[] no_edges = []
+int[] no_vertices = []
+collections.DirectedGraph empty_graph = collections.directed_graph(no_vertices, no_edges)
+print.line(len(empty_graph.indegrees()) == 0)
+match collections.directed_graph(["a", "a"], labeled_edges)
+    error problem
+        print.line(problem.code)
+    collections.DirectedGraph
+        print.line("unexpected graph")
+(string, string)[] unknown_source = [("missing", "a")]
+match collections.directed_graph(labels, unknown_source)
+    error problem
+        print.line(problem.code)
+    collections.DirectedGraph
+        print.line("unexpected graph")
+(string, string)[] unknown_target = [("a", "missing")]
+match collections.directed_graph(labels, unknown_target)
+    error problem
+        print.line(problem.code)
+    collections.DirectedGraph
+        print.line("unexpected graph")
