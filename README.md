@@ -15,10 +15,10 @@ Use the matching Quidra 0.6.x Core toolchain. The declaration initializer syntax
 ```quidra
 import collections
 
-collections.Queue<string> jobs := collections.Queue<string>(["first", "second"])
+jobs := collections.Queue<string>(["first", "second"])
 .jobs.push("third")
 while not jobs.empty()
-    string job := .jobs.take()
+    job := .jobs.take()
     print.line(job)
 ```
 
@@ -29,7 +29,7 @@ while not jobs.empty()
 ```quidra
 import collections
 
-collections.PriorityQueue<string, int> queue := collections.PriorityQueue<string, int>()
+queue := collections.PriorityQueue<string, int>()
 .queue.push("email", 3)
 .queue.push("deploy", 1)
 match .queue.pop()
@@ -46,7 +46,7 @@ bool by_name(string a, string b)
     return [a, b].sorted()[0] == a and a != b
 
 func<bool>(string, string) name_order := by_name
-collections.PriorityQueue<string, int> named := collections.PriorityQueue<string, int>(tie_before = name_order)
+named := collections.PriorityQueue<string, int>(tie_before = name_order)
 .named.push("zeta", 2)
 .named.push("alpha", 2)
 ```
@@ -61,9 +61,9 @@ The comparator is fixed at construction; `tie_before` cannot be reassigned after
 import collections
 
 int[] values := [7, 3, 7, 2, 3]
-distinct<int> members := collections.to_distinct(values)
-int[] first_occurrences := collections.unique(values)
-nat position := collections.index(values, 3)
+members := collections.to_distinct(values)
+first_occurrences := collections.unique(values)
+position := collections.index(values, 3)
 ```
 
 `to_distinct<T>(T[]) -> distinct<T>` builds a native distinct container in first-appearance order. `unique<T>(T[]) -> T[]` returns those values as an array, without sorting. Both accept the native key domain: integers, naturals, bool, string, and recursively composed tuples of these types. Empty input produces an empty result. Returned values have independent value semantics; changing a returned set or array does not change the input.
@@ -92,11 +92,11 @@ nat | none selected := distances.argmin(where = [false, true, true, true])
 ```quidra
 import collections
 
-string[] recent := ["older"]
+recent := ["older"]
 .recent.push("newest")
-string newest := .recent.take()
+newest := .recent.take()
 .recent.insert(0, "first")
-bool removed := .recent.remove("older")
+removed := .recent.remove("older")
 ```
 
 These functions provide writable array extension syntax after importing Collections. The ordinary function form takes an explicit reference, for example `collections.push(&recent, "next")`.
@@ -118,7 +118,7 @@ The receiver must be a writable, runtime-sized array. Each successful operation 
 import collections
 
 int[] values := [1, 2, 3, 4, 5]
-int[][] groups := values.chunks(2)
+groups := values.chunks(2)
 ```
 
 `chunks<T>(T[], nat size) -> T[][] | error` divides an array into consecutive groups of at most `size` elements. It preserves order, retains a shorter final group and returns no groups for empty input. A zero size reports `COLLECTIONS_SIZE`, including for empty input. Input and returned groups have independent value semantics. The function is also available as `collections.chunks(values, size)`.
