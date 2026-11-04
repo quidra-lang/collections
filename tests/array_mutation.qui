@@ -45,7 +45,7 @@ println("pop-single={.empty.take()}:{len(empty)}")
 (string, int)[] pairs := [("a", 1)]
 .pairs.push(("b", 2))
 println("tuple-remove={.pairs.remove(("a", 1))}")
-(string label, int number) := .pairs.take()
+(label, number) := .pairs.take()
 println("tuple-take={label}:{number}")
 class Item(int id)
 Item[] items := []
@@ -58,7 +58,7 @@ collections.PriorityQueue<string, int> queue := collections.PriorityQueue<string
 .queue.push("second", 1)
 queue_copy := queue
 while not queue.empty()
-    (string name, int priority) := .queue.take()
+    (name, priority) := .queue.take()
     println("priority-take={name}:{priority}")
 println("priority-copy={queue_copy.size()}")
 match .queue.take()

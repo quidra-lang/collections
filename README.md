@@ -51,7 +51,7 @@ named := collections.PriorityQueue<string, int>(tie_before = name_order)
 .named.push("alpha", 2)
 ```
 
-The comparator runs only on equal priorities and must be pure, transitive and consistent for the queue's lifetime. `push`, `pop`, `take`, and `clear` mutate the receiver and require Quidra's `.` marker. `peek` and `pop` return `(T, P) | none` when empty. `take` returns `(T, P) | error`, reporting `COLLECTIONS_PRIORITY_QUEUE` when empty; use it when removal is required, as in `(string name, int priority) := .queue.take()`. `size` and `empty` are read-only. Heap push/pop operations take O(log n), while `peek` is O(1).
+The comparator runs only on equal priorities and must be pure, transitive and consistent for the queue's lifetime. `push`, `pop`, `take`, and `clear` mutate the receiver and require Quidra's `.` marker. `peek` and `pop` return `(T, P) | none` when empty. `take` returns `(T, P) | error`, reporting `COLLECTIONS_PRIORITY_QUEUE` when empty; use it when removal is required, as in `(name, priority) := .queue.take()`. `size` and `empty` are read-only. Heap push/pop operations take O(log n), while `peek` is O(1).
 
 The comparator is fixed at construction; `tie_before` cannot be reassigned after items have been inserted.
 

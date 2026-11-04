@@ -46,7 +46,7 @@ match collections.group_sum<string, int>(invalid_keys, invalid_values)
     error problem
         println("length-error")
 groups := collections.runs(["a", "a", "b", "a"])
-(string run_text, nat run_count) := groups[0]
+(run_text, run_count) := groups[0]
 println("runs={len(groups)}:{run_text}:{run_count}")
 int[] aa := [1, 2]
 int[] bb := [1, 3]

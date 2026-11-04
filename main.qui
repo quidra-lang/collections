@@ -310,7 +310,7 @@ T[] sorted_by_pair<T, K, L>(extend T[] values, const func<(K, L)>(T) key, (bool,
     K[] first := []
     L[] second := []
     for value := values[]
-        (K primary, L secondary) := key(value)
+        (primary, secondary) := key(value)
         first = first.append(primary)
         second = second.append(secondary)
     return values.sorted(by = (first, second), descending = descending)
@@ -324,7 +324,7 @@ private bool valid_vertex(int vertex, nat vertices)
 int[][] | error adjacency_lists(nat vertices, (int, int)[] edges, undirected := false)
     int[] empty := []
     neighbors := array(vertices, fill = empty)
-    for (int source, int target) := edges[]
+    for (source, target) := edges[]
         if not valid_vertex(source, vertices) or not valid_vertex(target, vertices)
             return error("edge endpoint is outside the graph", code = "COLLECTIONS_VERTEX")
         from := nat(source)
@@ -337,7 +337,7 @@ int[][] | error adjacency_lists(nat vertices, (int, int)[] edges, undirected := 
 (int, int)[][] | error weighted_adjacency_lists(nat vertices, (int, int, int)[] edges, undirected := false)
     (int, int)[] empty := []
     (int, int)[][] neighbors := array(vertices, fill = empty)
-    for (int source, int target, int weight) := edges[]
+    for (source, target, weight) := edges[]
         if not valid_vertex(source, vertices) or not valid_vertex(target, vertices)
             return error("edge endpoint is outside the graph", code = "COLLECTIONS_VERTEX")
         from := nat(source)
@@ -346,9 +346,9 @@ int[][] | error adjacency_lists(nat vertices, (int, int)[] edges, undirected := 
         if undirected and from != to
             neighbors[to] = neighbors[to].append((source, weight))
     for: nat vertex < vertices
-        (int, int)[] row := neighbors[vertex]
+        row := neighbors[vertex]
         int[] targets := []
-        for (int target, _) := row[]
+        for (target, _) := row[]
             targets = targets.append(target)
         neighbors[vertex] = row.sorted(by = targets)
     return neighbors
@@ -377,7 +377,7 @@ DirectedGraph | error directed_graph<K>(K[] vertices, (K, K)[] edges)
     nat[] empty := []
     outgoing := array(size, fill = empty)
     incoming := array(size, fill = 0)
-    for (K source, K target) := edges[]
+    for (source, target) := edges[]
         from := vertex_position(positions, source, size)
         to := vertex_position(positions, target, size)
         if from == size or to == size

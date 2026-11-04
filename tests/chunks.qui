@@ -22,5 +22,5 @@ match empty.chunks(0)
         println("zero={failure.code}")
 (string, int)[] pairs := [("λ", 1), ("海", 2), ("x", 3)]
 pair_groups := pairs.chunks(2)
-(string label, int number) := pair_groups[1][0]
+(label, number) := pair_groups[1][0]
 println("tuple={label}:{number}")
