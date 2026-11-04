@@ -8,7 +8,7 @@ First-party general-purpose collection algorithms and data structures for Quidra
 quidra install quidra-collections
 ```
 
-Use the matching Quidra 0.6.x Core toolchain. The declaration initializer syntax requires Core commit `8b082468b28acf32fd0dd0f5f649934274c94d08` or later; the compatibility workflow pins that baseline. Development occurs on `develop`.
+Use the matching Quidra 0.6.x Core toolchain. The compatibility workflow pins [Core `84f1222`](https://github.com/quidra-lang/quidra/commit/84f122237795f1b6258a588ce740b377cbe6740d), which includes the current numeric literal defaults and checked numeric argument conversions. Development occurs on `develop`.
 
 ## FIFO queue
 
