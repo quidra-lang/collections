@@ -8,7 +8,7 @@ First-party general-purpose collection algorithms and data structures for Quidra
 quidra install quidra-collections
 ```
 
-Use the matching Quidra 0.6.x Core toolchain. The compatibility workflow pins [Core `84f1222`](https://github.com/quidra-lang/quidra/commit/84f122237795f1b6258a588ce740b377cbe6740d), which includes the current numeric literal defaults and checked numeric argument conversions. Development occurs on `develop`.
+Use the matching Quidra 0.6.x Core toolchain. The compatibility workflow pins [Core `323790a`](https://github.com/quidra-lang/quidra/commit/323790a8a1618a8a3b23b46fcb5098042d1d4beb), which includes the current numeric literal defaults, checked numeric argument conversions and `for:` declarations. Development occurs on `develop`.
 
 ## FIFO queue
 
