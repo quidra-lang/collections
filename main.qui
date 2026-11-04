@@ -376,7 +376,7 @@ DirectedGraph | error directed_graph<K>(K[] vertices, (K, K)[] edges)
         .positions.set(label, i)
     nat[] empty := []
     outgoing := array(size, fill = empty)
-    int[] incoming := array(size, fill = 0)
+    incoming := array(size, fill = 0)
     for (K source, K target) := edges[]
         from := vertex_position(positions, source, size)
         to := vertex_position(positions, target, size)

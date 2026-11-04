@@ -60,7 +60,7 @@ The comparator is fixed at construction; `tie_before` cannot be reassigned after
 ```quidra
 import collections
 
-int[] values := [7, 3, 7, 2, 3]
+values := [7, 3, 7, 2, 3]
 members := collections.to_distinct(values)
 first_occurrences := collections.unique(values)
 position := collections.index(values, 3)
@@ -83,7 +83,7 @@ returns `none` for an absent value or empty input. It is also available as
 ```quidra
 import collections
 
-int[] distances := [1, 7, 2, 2]
+distances := [1, 7, 2, 2]
 nat | none selected := distances.argmin(where = [false, true, true, true])
 ```
 
@@ -119,7 +119,7 @@ The receiver must be a writable, runtime-sized array. Each successful operation 
 ```quidra
 import collections
 
-int[] values := [1, 2, 3, 4, 5]
+values := [1, 2, 3, 4, 5]
 groups := values.chunks(2)
 ```
 
@@ -129,7 +129,7 @@ groups := values.chunks(2)
 
 ```quidra
 keys := ["b", "a", "b"]
-int[] values := [7, 3, 2]
+values := [7, 3, 2]
 grouped := collections.group_by(keys, values)
 ```
 
@@ -142,7 +142,7 @@ words := ["apple", "banana", "apple"]
 counts := collections.frequencies(words)
 
 regions := ["north", "south", "north"]
-int[] amounts := [10, 5, 8]
+amounts := [10, 5, 8]
 totals := collections.group_sum<string, int>(regions, amounts)
 ```
 
@@ -159,8 +159,8 @@ grouped := collections.runs([1, 1, 2, 1])
 ## Lexicographic array comparison
 
 ```quidra
-int[] left := [1, 2]
-int[] right := [1, 3]
+left := [1, 2]
+right := [1, 3]
 order := collections.lex_compare(left, right)
 ```
 
