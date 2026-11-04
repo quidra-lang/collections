@@ -72,6 +72,8 @@ position := collections.index(values, 3)
 
 These three functions also support array extension syntax after `import collections`: `values.to_distinct()`, `values.unique()`, and `values.index(3)`.
 
+`members.sorted() -> T[]` returns an independent array of the distinct elements in ascending order. It uses the same ordering as Core array sorting for integer, natural, bool, and string elements. Tuple keys have no default ordering. An empty set produces an empty array, and the set retains its insertion order.
+
 `find_index<T:equatable>(T[], T) -> nat | none` finds the same first index and
 returns `none` for an absent value or empty input. It is also available as
 `values.find_index(3)`.

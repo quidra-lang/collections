@@ -189,6 +189,9 @@ distinct<T> to_distinct<T>(extend T[] values)
 T[] unique<T>(extend T[] values)
     return to_distinct(values).values()
 
+T[] sorted<T>(extend distinct<T> source)
+    return source.values().sorted()
+
 map<K, V[]> | error group_by<K, V>(K[] keys, V[] values)
     if len(keys) != len(values)
         return error("group_by requires equal-length arrays", code = "COLLECTIONS_LENGTH")
