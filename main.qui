@@ -1,5 +1,5 @@
 nat | none find_index<T: equatable>(extend T[] values, T needle)
-    for nat i < len(values)
+    for: nat i < len(values)
         if values[i] == needle
             return i
     return none
@@ -16,7 +16,7 @@ nat | none | error argmin<T: integer>(extend T[] values, bool[] where)
     if len(where) != size
         return error("values and selection mask must have the same length", code = "COLLECTIONS_LENGTH")
     best := size
-    for nat i < size
+    for: nat i < size
         if where[i] and (best == size or values[i] < values[best])
             best = i
     if best == size
@@ -196,7 +196,7 @@ map<K, V[]> | error group_by<K, V>(K[] keys, V[] values)
     if len(keys) != len(values)
         return error("group_by requires equal-length arrays", code = "COLLECTIONS_LENGTH")
     map<K, V[]> grouped
-    for nat i < len(keys)
+    for: nat i < len(keys)
         match grouped.get(keys[i])
             V[] group
                 .grouped.set(keys[i], group.append(values[i]))
@@ -208,7 +208,7 @@ map<K, V> | error group_sum<K, V: integer>(K[] keys, V[] values)
     if len(keys) != len(values)
         return error("group_sum requires equal-length arrays", code = "COLLECTIONS_LENGTH")
     map<K, V> grouped
-    for nat i < len(keys)
+    for: nat i < len(keys)
         .grouped.increment(keys[i], by = values[i])
     return grouped
 
@@ -218,7 +218,7 @@ map<K, V> | error group_sum<K, V: integer>(K[] keys, V[] values)
         return result
     current := values[0]
     nat count := 1
-    for 1 <= nat i < len(values)
+    for: 1 <= nat i < len(values)
         if values[i] == current
             count += 1
         else
@@ -229,7 +229,7 @@ map<K, V> | error group_sum<K, V: integer>(K[] keys, V[] values)
 
 int lex_compare<T: ordered>(T[] left, T[] right)
     common := if len(left) < len(right) then len(left) else len(right)
-    for nat i < common
+    for: nat i < common
         if left[i] < right[i]
             return -1
         if left[i] > right[i]
@@ -242,7 +242,7 @@ int lex_compare<T: ordered>(T[] left, T[] right)
 
 nat[] lex_order<T: ordered>(T[][] keys, descending := false)
     order := keys.indices()
-    for 1 <= nat i < len(order)
+    for: 1 <= nat i < len(order)
         current := order[i]
         j := i
         while j > 0
@@ -292,7 +292,7 @@ class Queue<T>(local T[] initial := [])
     keys := source.keys()
     values := source.values()
     (K, V)[] result := []
-    for nat i < len(keys)
+    for: nat i < len(keys)
         result = result.append((keys[i], values[i]))
     return result
 
@@ -345,7 +345,7 @@ int[][] | error adjacency_lists(nat vertices, (int, int)[] edges, undirected := 
         neighbors[from] = neighbors[from].append((target, weight))
         if undirected and from != to
             neighbors[to] = neighbors[to].append((source, weight))
-    for nat vertex < vertices
+    for: nat vertex < vertices
         (int, int)[] row := neighbors[vertex]
         int[] targets := []
         for (int target, _) := row[]
@@ -370,7 +370,7 @@ private nat vertex_position<K>(map<K, nat> positions, K label, nat absent)
 DirectedGraph | error directed_graph<K>(K[] vertices, (K, K)[] edges)
     size := len(vertices)
     map<K, nat> positions
-    for label := vertices[nat i]
+    for: label := vertices[i]
         if positions.has(label)
             return error("directed graph has a duplicate vertex label", code = "COLLECTIONS_VERTEX")
         .positions.set(label, i)
@@ -422,7 +422,7 @@ class BinaryNodes<T>()
 
     NodeId | error leftmost(NodeId id)
         current := id
-        for nat step < len(nodes)
+        for: nat step < len(nodes)
             node := get(current)
             match node.left
                 NodeId child
@@ -434,7 +434,7 @@ class BinaryNodes<T>()
     (T, NodeId | none) | error .detach_leftmost(NodeId root)
         NodeId | none parent_id := none
         current := root
-        for nat step < len(nodes)
+        for: nat step < len(nodes)
             node := try get(current)
             match node.left
                 NodeId child
