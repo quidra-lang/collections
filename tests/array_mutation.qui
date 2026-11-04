@@ -3,55 +3,55 @@ import collections
 int[] values := [1, 2, 1]
 int[] copied := values
 .values.push(3)
-print.line("push={len(values)}:{values[3]}:{len(copied)}")
-print.line("remove={.values.remove(1)}:{values[0]}:{len(values)}")
-print.line("remove-missing={.values.remove(9)}:{len(values)}")
+println("push={len(values)}:{values[3]}:{len(copied)}")
+println("remove={.values.remove(1)}:{values[0]}:{len(values)}")
+println("remove-missing={.values.remove(9)}:{len(values)}")
 .values.insert(0, 7)
 .values.insert(len(values), 8)
 .values.insert(2, 9)
-print.line("insert={values[0]}:{values[2]}:{values[5]}")
-print.line("take={.values.take()}:{len(values)}")
+println("insert={values[0]}:{values[2]}:{values[5]}")
+println("take={.values.take()}:{len(values)}")
 match .values.pop()
     int value
-        print.line("pop={value}:{len(values)}")
+        println("pop={value}:{len(values)}")
     none
-        print.line("unexpected")
-print.line("copy={copied[0]}:{copied[1]}:{copied[2]}")
+        println("unexpected")
+println("copy={copied[0]}:{copied[1]}:{copied[2]}")
 match .values.insert(99, 4)
     void
-        print.line("unexpected")
+        println("unexpected")
     error failure
-        print.line("insert-error={failure.code}:{len(values)}:{values[0]}:{values[2]}")
-print.line("remove-last={.values.remove(1)}:{len(values)}")
-print.line("remove-middle={.values.remove(2)}:{values[1]}")
+        println("insert-error={failure.code}:{len(values)}:{values[0]}:{values[2]}")
+println("remove-last={.values.remove(1)}:{len(values)}")
+println("remove-middle={.values.remove(2)}:{values[1]}")
 int[] single := [4]
-print.line("remove-single={.single.remove(4)}:{len(single)}")
+println("remove-single={.single.remove(4)}:{len(single)}")
 int[] empty := []
-print.line("remove-empty={.empty.remove(1)}")
+println("remove-empty={.empty.remove(1)}")
 match .empty.pop()
     int value
-        print.line("unexpected")
+        println("unexpected")
     none
-        print.line("empty-pop=none")
+        println("empty-pop=none")
 match .empty.take()
     int value
-        print.line("unexpected")
+        println("unexpected")
     error failure
-        print.line("empty-take={failure.code}")
+        println("empty-take={failure.code}")
 .empty.insert(0, 5)
-print.line("insert-empty={.empty.take()}:{len(empty)}")
+println("insert-empty={.empty.take()}:{len(empty)}")
 .empty.push(6)
-print.line("pop-single={.empty.take()}:{len(empty)}")
+println("pop-single={.empty.take()}:{len(empty)}")
 (string, int)[] pairs := [("a", 1)]
 .pairs.push(("b", 2))
-print.line("tuple-remove={.pairs.remove(("a", 1))}")
+println("tuple-remove={.pairs.remove(("a", 1))}")
 (string label, int number) := .pairs.take()
-print.line("tuple-take={label}:{number}")
+println("tuple-take={label}:{number}")
 class Item(int id)
 Item[] items := []
 .items.push(Item(7))
 Item item := .items.take()
-print.line("class-take={item.id}")
+println("class-take={item.id}")
 collections.PriorityQueue<string, int> queue := collections.PriorityQueue<string, int>()
 .queue.push("later", 3)
 .queue.push("first", 1)
@@ -59,23 +59,23 @@ collections.PriorityQueue<string, int> queue := collections.PriorityQueue<string
 queue_copy := queue
 while not queue.empty()
     (string name, int priority) := .queue.take()
-    print.line("priority-take={name}:{priority}")
-print.line("priority-copy={queue_copy.size()}")
+    println("priority-take={name}:{priority}")
+println("priority-copy={queue_copy.size()}")
 match .queue.take()
     (string name, int priority)
-        print.line("unexpected")
+        println("unexpected")
     error failure
-        print.line("priority-empty={failure.code}")
+        println("priority-empty={failure.code}")
 
 int[] positions := [9, 4, 9, 6]
 int removed_at := .positions.remove_at(2)
-print.line("remove-at={removed_at}:{positions == [int(9), 4, 6]}")
+println("remove-at={removed_at}:{positions == [int(9), 4, 6]}")
 match .positions.remove_at(3)
     error problem
-        print.line("remove-at-error={problem.code}:{len(positions)}")
+        println("remove-at-error={problem.code}:{len(positions)}")
     int
-        print.line("unexpected removal")
+        println("unexpected removal")
 int last_at := .positions.remove_at(2)
 int first_at := .positions.remove_at(0)
 int only_at := .positions.remove_at(0)
-print.line("remove-at-boundaries={last_at}:{first_at}:{only_at}:{len(positions)}")
+println("remove-at-boundaries={last_at}:{first_at}:{only_at}:{len(positions)}")

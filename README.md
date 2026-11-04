@@ -19,7 +19,7 @@ jobs := collections.Queue<string>(["first", "second"])
 .jobs.push("third")
 while not jobs.empty()
     job := .jobs.take()
-    print.line(job)
+    println(job)
 ```
 
 `Queue<T>` removes values in insertion order and can start with an array of values. `size()` and `empty()` query the remaining values. `.pop()` returns `T | none`, with `none` for an empty queue. `.take()` returns `T | error`, reporting `COLLECTIONS_QUEUE` when empty. Queue copies have independent value semantics. If the element type already includes the empty-queue return alternative, check `empty()` or use the other removal method when you need to distinguish a stored value from an empty queue.
@@ -34,9 +34,9 @@ queue := collections.PriorityQueue<string, int>()
 .queue.push("deploy", 1)
 match .queue.pop()
     (string name, int priority)
-        print.line("{name} {priority}")
+        println("{name} {priority}")
     none
-        print.line("empty")
+        println("empty")
 ```
 
 Smaller priority values are removed first; equal priorities are removed in insertion order by default. To use a value-based tie-breaker, pass a capture-free comparator that defines a strict ordering of values. A false result in both directions preserves insertion order:

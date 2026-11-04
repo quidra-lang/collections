@@ -4,56 +4,56 @@ string[] words := ["apple", "banana", "apple"]
 counts := collections.frequencies(words)
 match counts.get("apple")
     nat count
-        print.line("apple={count}")
+        println("apple={count}")
     none
-        print.line("missing")
+        println("missing")
 
 collections.PriorityQueue<string, int> queue := collections.PriorityQueue<string, int>()
 .queue.push("email", 3)
 .queue.push("deploy", 1)
 .queue.push("backup", 1)
-print.line("size={queue.size()}")
+println("size={queue.size()}")
 match .queue.pop()
     (string value, int priority)
-        print.line("{value}:{priority}")
+        println("{value}:{priority}")
     none
-        print.line("missing")
+        println("missing")
 match .queue.pop()
     (string value, int priority)
-        print.line("{value}:{priority}")
+        println("{value}:{priority}")
     none
-        print.line("missing")
+        println("missing")
 match .queue.pop()
     (string value, int priority)
-        print.line("{value}:{priority}")
+        println("{value}:{priority}")
     none
-        print.line("missing")
-print.line("empty={queue.empty()}")
+        println("missing")
+println("empty={queue.empty()}")
 
 string[] regions := ["east", "west", "east"]
 int[] amounts := [3, 5, 7]
 totals := collections.group_sum<string, int>(regions, amounts)
 match totals.get("east")
     int total
-        print.line("east={total}")
+        println("east={total}")
     none
-        print.line("missing")
+        println("missing")
 string[] invalid_keys := ["a", "b"]
 int[] invalid_values := [1]
 match collections.group_sum<string, int>(invalid_keys, invalid_values)
     map<string, int> invalid
-        print.line("unexpected")
+        println("unexpected")
     error problem
-        print.line("length-error")
+        println("length-error")
 groups := collections.runs(["a", "a", "b", "a"])
 (string run_text, nat run_count) := groups[0]
-print.line("runs={len(groups)}:{run_text}:{run_count}")
+println("runs={len(groups)}:{run_text}:{run_count}")
 int[] aa := [1, 2]
 int[] bb := [1, 3]
 int[] cc := [1, 2, 0]
-print.line("lex={collections.lex_compare(aa, bb)}")
-print.line("lex-equal={collections.lex_compare(aa, aa)}")
-print.line("lex-prefix={collections.lex_compare(aa, cc)}")
+println("lex={collections.lex_compare(aa, bb)}")
+println("lex-equal={collections.lex_compare(aa, aa)}")
+println("lex-prefix={collections.lex_compare(aa, cc)}")
 
 bool alphabetical(string left, string right)
     return [left, right].sorted()[0] == left and left != right
@@ -65,20 +65,20 @@ collections.PriorityQueue<string, int> named := collections.PriorityQueue<string
 .named.push("beta", 1)
 match .named.pop()
     (string value, int priority)
-        print.line("named={value}:{priority}")
+        println("named={value}:{priority}")
     none
-        print.line("missing")
+        println("missing")
 match .named.pop()
     (string value, int priority)
-        print.line("named={value}:{priority}")
+        println("named={value}:{priority}")
     none
-        print.line("missing")
+        println("missing")
 match .named.pop()
     (string value, int priority)
-        print.line("named={value}:{priority}")
+        println("named={value}:{priority}")
     none
-        print.line("missing")
+        println("missing")
 
 int[][] sequences := [[4, 5, 4, 3], [4, 6, 5, 2], [4, 6, 5, 2]]
 nat[] ranked := collections.lex_order(sequences, descending = true)
-print.line("rank={ranked[0]}:{ranked[1]}:{ranked[2]}")
+println("rank={ranked[0]}:{ranked[1]}:{ranked[2]}")

@@ -3,11 +3,11 @@ import collections
 void show(string label, nat | none | error result)
     match result
         nat index
-            print.line("{label}={index}")
+            println("{label}={index}")
         none
-            print.line("{label}=none")
+            println("{label}=none")
         error problem
-            print.line("{label}={problem.code}")
+            println("{label}={problem.code}")
 
 int[] distances := [-3, 7, 2, 2, 9]
 show("first-tie", collections.argmin(distances, where = [false, true, true, true, true]))
