@@ -126,7 +126,7 @@ groups := values.chunks(2)
 ## Grouping aligned arrays
 
 ```quidra
-string[] keys := ["b", "a", "b"]
+keys := ["b", "a", "b"]
 int[] values := [7, 3, 2]
 grouped := collections.group_by(keys, values)
 ```
@@ -136,10 +136,10 @@ grouped := collections.group_by(keys, values)
 ## Frequencies and grouped sums
 
 ```quidra
-string[] words := ["apple", "banana", "apple"]
-map<string, nat> counts := collections.frequencies(words)
+words := ["apple", "banana", "apple"]
+counts := collections.frequencies(words)
 
-string[] regions := ["north", "south", "north"]
+regions := ["north", "south", "north"]
 int[] amounts := [10, 5, 8]
 totals := collections.group_sum<string, int>(regions, amounts)
 ```
@@ -159,7 +159,7 @@ grouped := collections.runs([1, 1, 2, 1])
 ```quidra
 int[] left := [1, 2]
 int[] right := [1, 3]
-int order := collections.lex_compare(left, right)
+order := collections.lex_compare(left, right)
 ```
 
 `lex_compare<T:ordered>(T[], T[]) -> int` returns -1, 0 or 1. It compares corresponding values in order, then breaks common-prefix ties by array length. It does not mutate either array.
@@ -178,7 +178,7 @@ class Result(string name, int points)
 int points_of(Result result)
     return result.points
 
-Result[] results := [Result("Aki", 5), Result("Yui", 8)]
+results := [Result("Aki", 5), Result("Yui", 8)]
 func<int>(Result) key := points_of
 ranked := collections.sorted_by(results, key, descending = true)
 ```

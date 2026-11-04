@@ -237,7 +237,7 @@ int lex_compare<T: ordered>(T[] left, T[] right)
         return 1
     return 0
 
-nat[] lex_order<T: ordered>(T[][] keys, bool descending := false)
+nat[] lex_order<T: ordered>(T[][] keys, descending := false)
     order := keys.indices()
     for 1 <= nat i < len(order)
         current := order[i]
@@ -252,7 +252,7 @@ nat[] lex_order<T: ordered>(T[][] keys, bool descending := false)
     return order
 
 class Queue<T>(local T[] initial := [])
-    private T[] values := initial
+    private values := initial
     private nat head := 0
 
     nat size()
@@ -293,8 +293,8 @@ class Queue<T>(local T[] initial := [])
         result = result.append((keys[i], values[i]))
     return result
 
-T[] sorted_by<T, K>(extend T[] values, const func<K>(T) key, bool descending := false)
-    keys := [for T value := values[] then key(value)]
+T[] sorted_by<T, K>(extend T[] values, const func<K>(T) key, descending := false)
+    keys := [for value := values[] then key(value)]
     return values.sorted(by = keys, descending = descending)
 
 (K, V)[] sorted_entries<K, V>(map<K, V> source)
@@ -318,7 +318,7 @@ private bool valid_vertex(int vertex, nat vertices)
     index := nat(vertex)
     return index < vertices
 
-int[][] | error adjacency_lists(nat vertices, (int, int)[] edges, bool undirected := false)
+int[][] | error adjacency_lists(nat vertices, (int, int)[] edges, undirected := false)
     int[] empty := []
     neighbors := array(vertices, fill = empty)
     for (int source, int target) := edges[]
@@ -331,7 +331,7 @@ int[][] | error adjacency_lists(nat vertices, (int, int)[] edges, bool undirecte
             neighbors[to] = neighbors[to].append(source)
     return [for row := neighbors[] then row.sorted()]
 
-(int, int)[][] | error weighted_adjacency_lists(nat vertices, (int, int, int)[] edges, bool undirected := false)
+(int, int)[][] | error weighted_adjacency_lists(nat vertices, (int, int, int)[] edges, undirected := false)
     (int, int)[] empty := []
     (int, int)[][] neighbors := array(vertices, fill = empty)
     for (int source, int target, int weight) := edges[]
