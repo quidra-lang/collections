@@ -42,13 +42,13 @@ T | error take<T>(extend T[] &values)
         return error("cannot take from an empty array", code = "COLLECTIONS_EMPTY")
     return remove_last(&values)
 
-T | error remove_at<T>(extend T[] &values, nat index)
-    if index >= len(values)
+T | error remove_at<T>(extend T[] &values, nat position)
+    if position >= len(values)
         return error("removal index exceeds the array length", code = "COLLECTIONS_INDEX")
-    if index + 1 == len(values)
+    if position + 1 == len(values)
         return remove_last(&values)
-    value := values[index]
-    values = values[:<index].concat(values[index + 1:])
+    value := values[position]
+    values = values[:<position].concat(values[position + 1:])
     return value
 
 bool remove<T: equatable>(extend T[] &values, T needle)
@@ -59,13 +59,13 @@ bool remove<T: equatable>(extend T[] &values, T needle)
         none
             return false
 
-void | error insert<T>(extend T[] &values, nat index, T value)
-    if index > len(values)
+void | error insert<T>(extend T[] &values, nat position, T value)
+    if position > len(values)
         return error("insertion index exceeds the array length", code = "COLLECTIONS_INDEX")
-    if index == len(values)
+    if position == len(values)
         values = values.append(value)
     else
-        values = values[:<index].append(value).concat(values[index:])
+        values = values[:<position].append(value).concat(values[position:])
     return void
 
 T[][] | error chunks<T>(extend T[] values, nat size)
@@ -122,15 +122,15 @@ class PriorityQueue<T, P: ordered>(const func<bool>(T, T) | none tie_before := n
         else
             entries = entries.append(entry)
         active += 1
-        index := active - 1
-        while index > 0
-            parent := (index - 1) / 2
-            if not precedes(index, parent)
+        position := active - 1
+        while position > 0
+            parent := (position - 1) / 2
+            if not precedes(position, parent)
                 break
-            previous := entries[index]
-            entries[index] = entries[parent]
+            previous := entries[position]
+            entries[position] = entries[parent]
             entries[parent] = previous
-            index = parent
+            position = parent
 
     private (T, P) | none .remove_first()
         if active == 0
@@ -141,21 +141,21 @@ class PriorityQueue<T, P: ordered>(const func<bool>(T, T) | none tie_before := n
             entries = []
             return (first.value, first.priority)
         entries[0] = entries[active]
-        nat index := 0
+        nat position := 0
         while true
-            left := 2 * index + 1
+            left := 2 * position + 1
             if left >= active
                 break
             best := left
             right := left + 1
             if right < active and precedes(right, left)
                 best = right
-            if not precedes(best, index)
+            if not precedes(best, position)
                 break
-            previous := entries[index]
-            entries[index] = entries[best]
+            previous := entries[position]
+            entries[position] = entries[best]
             entries[best] = previous
-            index = best
+            position = best
         if active * 4 < len(entries)
             entries = entries[:<active]
         return (first.value, first.priority)
@@ -318,8 +318,8 @@ T[] sorted_by_pair<T, K, L>(extend T[] values, const func<(K, L)>(T) key, (bool,
 private bool valid_vertex(int vertex, nat vertices)
     if vertex < 0
         return false
-    index := nat(vertex)
-    return index < vertices
+    position := nat(vertex)
+    return position < vertices
 
 int[][] | error adjacency_lists(nat vertices, (int, int)[] edges, undirected := false)
     int[] empty := []

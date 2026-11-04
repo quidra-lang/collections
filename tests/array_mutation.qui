@@ -6,7 +6,7 @@ int[] copied := values
 println("push={len(values)}:{values[3]}:{len(copied)}")
 println("remove={.values.remove(1)}:{values[0]}:{len(values)}")
 println("remove-missing={.values.remove(9)}:{len(values)}")
-.values.insert(0, 7)
+.values.insert(position = 0, value = 7)
 .values.insert(len(values), 8)
 .values.insert(2, 9)
 println("insert={values[0]}:{values[2]}:{values[5]}")
@@ -68,7 +68,7 @@ match .queue.take()
         println("priority-empty={failure.code}")
 
 int[] positions := [9, 4, 9, 6]
-int removed_at := .positions.remove_at(2)
+int removed_at := .positions.remove_at(position = 2)
 println("remove-at={removed_at}:{positions == [int(9), 4, 6]}")
 match .positions.remove_at(3)
     error problem

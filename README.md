@@ -109,8 +109,8 @@ These functions provide writable array extension syntax after importing Collecti
 | `.values.pop()` | Removes the last value; returns `T \| none`, with `none` for an empty array. |
 | `.values.take()` | Removes the last value; returns `T \| error`, with `COLLECTIONS_EMPTY` for an empty array. |
 | `.values.remove(needle)` | Removes the first equal value and returns `true`, or returns `false` without changing the array when absent. Requires `equatable` elements. |
-| `.values.remove_at(index)` | Removes and returns the element at the zero-based index. Returns `T \| error`, with `COLLECTIONS_INDEX` and no change for an out-of-range index. |
-| `.values.insert(index, value)` | Inserts before an index from zero through `len(values)`, inclusive; the final index appends. Returns `void \| error`, with `COLLECTIONS_INDEX` and no change for a larger index. |
+| `.values.remove_at(position)` | Removes and returns the element at the zero-based position. Returns `T \| error`, with `COLLECTIONS_INDEX` and no change for an out-of-range position. |
+| `.values.insert(position, value)` | Inserts before a position from zero through `len(values)`, inclusive; the final position appends. Returns `void \| error`, with `COLLECTIONS_INDEX` and no change for a larger position. |
 
 The receiver must be a writable, runtime-sized array. Each successful operation rebinds it to a new array value using Core's ordinary append, concat and slice semantics; copies remain independent. The helpers add no resizable-storage or reference-invalidation semantics. As with `Queue`, a stored `none` cannot be distinguished from empty `pop` by its return value alone; use `take` or inspect the length when the element type includes `none`.
 
