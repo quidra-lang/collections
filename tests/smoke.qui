@@ -58,7 +58,7 @@ println("lex-prefix={collections.lex_compare(aa, cc)}")
 bool alphabetical(string left, string right)
     return [left, right].sorted()[0] == left and left != right
 
-func<bool>(string, string) order_by_name := alphabetical
+func<bool(string, string)> order_by_name := alphabetical
 collections.PriorityQueue<string, int> named := collections.PriorityQueue<string, int>(tie_before = order_by_name)
 .named.push("zebra", 2)
 .named.push("apple", 2)

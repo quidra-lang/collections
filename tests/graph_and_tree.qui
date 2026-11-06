@@ -27,7 +27,7 @@ class Record(string name, int score, int tie)
     return (record.score, record.tie)
 
 Record[] records := [Record("first", 2, 1), Record("second", 1, 3), Record("third", 2, 1), Record("fourth", 2, 0)]
-func<(int, int)>(Record) key := rank
+func<(int, int)(Record)> key := rank
 sorted := records.sorted_by_pair(key, descending = (true, false))
 println([for Record record := sorted[] then record.name].join(":"))
 

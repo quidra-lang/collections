@@ -107,7 +107,7 @@ class Scored(string name, int score)
 int score_of(Scored item)
     return item.score
 Scored[] scored := [Scored("first", 1), Scored("second", 2), Scored("third", 1)]
-func<int>(Scored) select_score := score_of
+func<int(Scored)> select_score := score_of
 ranked_records := collections.sorted_by(scored, select_score, descending = true)
 println("scored={ranked_records[0].name}:{ranked_records[1].name}:{ranked_records[2].name}")
 

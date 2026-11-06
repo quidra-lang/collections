@@ -8,7 +8,7 @@ First-party general-purpose collection algorithms and data structures for Quidra
 quidra install quidra-collections
 ```
 
-Use the matching Quidra 0.6.x Core toolchain. This development version uses `.len()` for array lengths; the compatibility workflow pins [Core `0d0150b`](https://github.com/quidra-lang/quidra/commit/0d0150b6aeaeecf26f471cbbc0fce35f2876782e) as its baseline. Development occurs on `develop`.
+Use the matching Quidra 0.6.x Core toolchain. The compatibility workflow pins [Core `29b40d4`](https://github.com/quidra-lang/quidra/commit/29b40d4f30b5b15f8376f7d67e4ef23429425fa0) for `.len()` and `func<R(P...)>` callback types. Development occurs on `develop`.
 
 ## FIFO queue
 
@@ -45,7 +45,7 @@ Smaller priority values are removed first; equal priorities are removed in inser
 bool by_name(string a, string b)
     return [a, b].sorted()[0] == a and a != b
 
-func<bool>(string, string) name_order := by_name
+func<bool(string, string)> name_order := by_name
 named := collections.PriorityQueue<string, int>(tie_before = name_order)
 .named.push("zeta", 2)
 .named.push("alpha", 2)
@@ -172,7 +172,7 @@ order := collections.lex_compare(left, right)
 
 `entries<K,V>(map<K,V>) -> (K,V)[]` pairs each key with its value in map insertion order. The result has independent value semantics.
 
-`sorted_by<T,K>(extend T[] values, const func<K>(T) key, bool descending := false) -> T[]` applies a capture-free key function once per record and returns a stable sorted copy. Equal keys keep their input order in both directions. Key types follow Core array sorting and include integers, fixed-width floating-point numbers, bool and string. Use a typed function value or explicit type arguments when calling it.
+`sorted_by<T,K>(extend T[] values, const func<K(T)> key, bool descending := false) -> T[]` applies a capture-free key function once per record and returns a stable sorted copy. Equal keys keep their input order in both directions. Key types follow Core array sorting and include integers, fixed-width floating-point numbers, bool and string. Use a typed function value or explicit type arguments when calling it.
 
 ```quidra
 class Result(string name, int points)
@@ -181,7 +181,7 @@ int points_of(Result result)
     return result.points
 
 results := [Result("Aki", 5), Result("Yui", 8)]
-func<int>(Result) key := points_of
+func<int(Result)> key := points_of
 ranked := collections.sorted_by(results, key, descending = true)
 ```
 
@@ -195,7 +195,7 @@ An empty map produces an empty array.
 
 ## Compound sort keys
 
-`sorted_by_pair<T,K,L>(extend T[] values, const func<(K,L)>(T) key, (bool, bool) descending := (false, false))`
+`sorted_by_pair<T,K,L>(extend T[] values, const func<(K, L)(T)> key, (bool, bool) descending := (false, false))`
 returns a stable sorted copy. The capture-free key function runs once per
 element. The primary key orders first and the secondary key breaks ties.
 Each key uses the same scalar ordering as Core array sorting. The direction

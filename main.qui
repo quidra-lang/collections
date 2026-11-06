@@ -83,7 +83,7 @@ T[][] | error chunks<T>(extend T[] values, nat size)
 
 private class HeapEntry<T, P>(T value, P priority, nat insertion)
 
-class PriorityQueue<T, P: ordered>(const func<bool>(T, T) | none tie_before := none)
+class PriorityQueue<T, P: ordered>(const func<bool(T, T)> | none tie_before := none)
     private HeapEntry<T, P>[] entries := []
     private nat active := 0
     private nat next_insertion := 0
@@ -94,7 +94,7 @@ class PriorityQueue<T, P: ordered>(const func<bool>(T, T) | none tie_before := n
         if entries[left].priority > entries[right].priority
             return false
         match tie_before
-            func<bool>(T, T) compare
+            func<bool(T, T)> compare
                 if compare(entries[left].value, entries[right].value)
                     return true
                 if compare(entries[right].value, entries[left].value)
@@ -296,7 +296,7 @@ class Queue<T>(local T[] initial := [])
         result = result.append((keys[i], values[i]))
     return result
 
-T[] sorted_by<T, K>(extend T[] values, const func<K>(T) key, descending := false)
+T[] sorted_by<T, K>(extend T[] values, const func<K(T)> key, descending := false)
     keys := [for value := values[] then key(value)]
     return values.sorted(by = keys, descending = descending)
 
@@ -306,7 +306,7 @@ T[] sorted_by<T, K>(extend T[] values, const func<K>(T) key, descending := false
 (K, V)[] ranked_entries<K, V>(map<K, V> source)
     return entries(source).sorted(by = (source.values(), source.keys()), descending = (true, false))
 
-T[] sorted_by_pair<T, K, L>(extend T[] values, const func<(K, L)>(T) key, (bool, bool) descending := (false, false))
+T[] sorted_by_pair<T, K, L>(extend T[] values, const func<(K, L)(T)> key, (bool, bool) descending := (false, false))
     K[] first := []
     L[] second := []
     for value := values[]
