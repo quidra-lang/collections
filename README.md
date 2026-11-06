@@ -8,7 +8,7 @@ First-party general-purpose collection algorithms and data structures for Quidra
 quidra install quidra-collections
 ```
 
-Use the matching Quidra 0.6.x Core toolchain. The compatibility workflow pins [Core `323790a`](https://github.com/quidra-lang/quidra/commit/323790a8a1618a8a3b23b46fcb5098042d1d4beb), which includes the current numeric literal defaults, checked numeric argument conversions and `for:` declarations. Development occurs on `develop`.
+Use the matching Quidra 0.6.x Core toolchain. This development version uses `.len()` for array lengths; the compatibility workflow pins [Core `0d0150b`](https://github.com/quidra-lang/quidra/commit/0d0150b6aeaeecf26f471cbbc0fce35f2876782e) as its baseline. Development occurs on `develop`.
 
 ## FIFO queue
 
@@ -110,7 +110,7 @@ These functions provide writable array extension syntax after importing Collecti
 | `.values.take()` | Removes the last value; returns `T \| error`, with `COLLECTIONS_EMPTY` for an empty array. |
 | `.values.remove(needle)` | Removes the first equal value and returns `true`, or returns `false` without changing the array when absent. Requires `equatable` elements. |
 | `.values.remove_at(position)` | Removes and returns the element at the zero-based position. Returns `T \| error`, with `COLLECTIONS_INDEX` and no change for an out-of-range position. |
-| `.values.insert(position, value)` | Inserts before a position from zero through `len(values)`, inclusive; the final position appends. Returns `void \| error`, with `COLLECTIONS_INDEX` and no change for a larger position. |
+| `.values.insert(position, value)` | Inserts before a position from zero through `values.len()`, inclusive; the final position appends. Returns `void \| error`, with `COLLECTIONS_INDEX` and no change for a larger position. |
 
 The receiver must be a writable, runtime-sized array. Each successful operation rebinds it to a new array value using Core's ordinary append, concat and slice semantics; copies remain independent. The helpers add no resizable-storage or reference-invalidation semantics. As with `Queue`, a stored `none` cannot be distinguished from empty `pop` by its return value alone; use `take` or inspect the length when the element type includes `none`.
 
