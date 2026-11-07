@@ -2,13 +2,15 @@
 
 First-party general-purpose collection algorithms and data structures for Quidra 0.6.x.
 
+On `develop`, `#value` is the ordinary zero-argument `value.len()` call. It also works automatically for custom classes and visible extensions that provide `len`; return types, errors and access/effect checks are unchanged. Standard array, string and binary lengths remain `nat`.
+
 ## Installation
 
 ```sh
 quidra install quidra-collections
 ```
 
-Use the matching Quidra 0.6.x Core toolchain. The compatibility workflow pins [Core `29b40d4`](https://github.com/quidra-lang/quidra/commit/29b40d4f30b5b15f8376f7d67e4ef23429425fa0) for `.len()` and `func<R(P...)>` callback types. Development occurs on `develop`.
+Use the matching Quidra 0.6.x Core toolchain. The compatibility workflow pins [Core `43328df`](https://github.com/quidra-lang/quidra/commit/43328df98bfb17df13b27b852068263a0453c687) for `#value`, `.len()` and `func<R(P...)>` callback types. Development occurs on `develop`.
 
 ## FIFO queue
 

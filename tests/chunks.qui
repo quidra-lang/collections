@@ -2,16 +2,16 @@ import collections
 
 int[] values := [1, 2, 3, 4, 5]
 int[][] groups := values.chunks(2)
-println("partial={groups.len()}:{groups[0].len()}:{groups[2].len()}:{groups[2][0]}")
+println("partial={#groups}:{#groups[0]}:{#groups[2]}:{groups[2][0]}")
 int[][] exact := values[:<4].chunks(2)
-println("exact={exact.len()}:{exact[1][1]}")
+println("exact={#exact}:{exact[1][1]}")
 int[][] wide := values.chunks(9)
-println("wide={wide.len()}:{wide[0].len()}")
+println("wide={#wide}:{#wide[0]}")
 int[][] huge := values.chunks(18446744073709551615)
-println("huge={huge.len()}:{huge[0].len()}")
+println("huge={#huge}:{#huge[0]}")
 int[] empty := []
 int[][] no_groups := empty.chunks(2)
-println("empty={no_groups.len()}")
+println("empty={#no_groups}")
 groups[0][0] = 99
 values[4] = 8
 println("independent={values[0]}:{groups[2][0]}")

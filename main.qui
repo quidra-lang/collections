@@ -1,5 +1,5 @@
 nat | none find_index<T: equatable>(extend T[] values, T needle)
-    for: nat i < values.len()
+    for: nat i < #values
         if values[i] == needle
             return i
     return none
@@ -12,8 +12,8 @@ nat | error index<T: equatable>(extend T[] values, T needle)
             return error("value is absent from the array", code = "COLLECTIONS_INDEX")
 
 nat | none | error argmin<T: integer>(extend T[] values, bool[] where)
-    size := values.len()
-    if where.len() != size
+    size := #values
+    if #where != size
         return error("values and selection mask must have the same length", code = "COLLECTIONS_LENGTH")
     best := size
     for: nat i < size
@@ -27,25 +27,25 @@ void push<T>(extend T[] &values, T value)
     values = values.append(value)
 
 private T remove_last<T>(T[] &values)
-    last := values.len() - 1
+    last := #values - 1
     value := values[last]
     values = values[:<last]
     return value
 
 T | none pop<T>(extend T[] &values)
-    if values.len() == 0
+    if #values == 0
         return none
     return remove_last(&values)
 
 T | error take<T>(extend T[] &values)
-    if values.len() == 0
+    if #values == 0
         return error("cannot take from an empty array", code = "COLLECTIONS_EMPTY")
     return remove_last(&values)
 
 T | error remove_at<T>(extend T[] &values, nat position)
-    if position >= values.len()
+    if position >= #values
         return error("removal index exceeds the array length", code = "COLLECTIONS_INDEX")
-    if position + 1 == values.len()
+    if position + 1 == #values
         return remove_last(&values)
     value := values[position]
     values = values[:<position].concat(values[position + 1:])
@@ -60,9 +60,9 @@ bool remove<T: equatable>(extend T[] &values, T needle)
             return false
 
 void | error insert<T>(extend T[] &values, nat position, T value)
-    if position > values.len()
+    if position > #values
         return error("insertion index exceeds the array length", code = "COLLECTIONS_INDEX")
-    if position == values.len()
+    if position == #values
         values = values.append(value)
     else
         values = values[:<position].append(value).concat(values[position:])
@@ -73,8 +73,8 @@ T[][] | error chunks<T>(extend T[] values, nat size)
         return error("chunk size must be positive", code = "COLLECTIONS_SIZE")
     T[][] result := []
     nat start := 0
-    while start < values.len()
-        remaining := values.len() - start
+    while start < #values
+        remaining := #values - start
         count := if size < remaining then size else remaining
         end := start + count
         result = result.append(values[start:<end])
@@ -117,7 +117,7 @@ class PriorityQueue<T, P: ordered>(const func<bool(T, T)> | none tie_before := n
     void .push(T value, P priority)
         entry := HeapEntry<T, P>(value, priority, next_insertion)
         next_insertion += 1
-        if active < entries.len()
+        if active < #entries
             entries[active] = entry
         else
             entries = entries.append(entry)
@@ -156,7 +156,7 @@ class PriorityQueue<T, P: ordered>(const func<bool(T, T)> | none tie_before := n
             entries[position] = entries[best]
             entries[best] = previous
             position = best
-        if active * 4 < entries.len()
+        if active * 4 < #entries
             entries = entries[:<active]
         return (first.value, first.priority)
 
@@ -193,10 +193,10 @@ T[] sorted<T>(extend distinct<T> source)
     return source.values().sorted()
 
 map<K, V[]> | error group_by<K, V>(K[] keys, V[] values)
-    if keys.len() != values.len()
+    if #keys != #values
         return error("group_by requires equal-length arrays", code = "COLLECTIONS_LENGTH")
     map<K, V[]> grouped
-    for: nat i < keys.len()
+    for: nat i < #keys
         match grouped.get(keys[i])
             V[] group
                 .grouped.set(keys[i], group.append(values[i]))
@@ -205,20 +205,20 @@ map<K, V[]> | error group_by<K, V>(K[] keys, V[] values)
     return grouped
 
 map<K, V> | error group_sum<K, V: integer>(K[] keys, V[] values)
-    if keys.len() != values.len()
+    if #keys != #values
         return error("group_sum requires equal-length arrays", code = "COLLECTIONS_LENGTH")
     map<K, V> grouped
-    for: nat i < keys.len()
+    for: nat i < #keys
         .grouped.increment(keys[i], by = values[i])
     return grouped
 
 (T, nat)[] runs<T: equatable>(T[] values)
     (T, nat)[] result := []
-    if values.len() == 0
+    if #values == 0
         return result
     current := values[0]
     nat count := 1
-    for: 1 <= nat i < values.len()
+    for: 1 <= nat i < #values
         if values[i] == current
             count += 1
         else
@@ -228,21 +228,21 @@ map<K, V> | error group_sum<K, V: integer>(K[] keys, V[] values)
     return result.append((current, count))
 
 int lex_compare<T: ordered>(T[] left, T[] right)
-    common := if left.len() < right.len() then left.len() else right.len()
+    common := if #left < #right then #left else #right
     for: nat i < common
         if left[i] < right[i]
             return -1
         if left[i] > right[i]
             return 1
-    if left.len() < right.len()
+    if #left < #right
         return -1
-    if left.len() > right.len()
+    if #left > #right
         return 1
     return 0
 
 nat[] lex_order<T: ordered>(T[][] keys, descending := false)
     order := keys.indices()
-    for: 1 <= nat i < order.len()
+    for: 1 <= nat i < #order
         current := order[i]
         j := i
         while j > 0
@@ -259,10 +259,10 @@ class Queue<T>(local T[] initial := [])
     private nat head := 0
 
     nat size()
-        return values.len() - head
+        return #values - head
 
     bool empty()
-        return head == values.len()
+        return head == #values
 
     void .push(T value)
         values = values.append(value)
@@ -270,7 +270,7 @@ class Queue<T>(local T[] initial := [])
     private T .remove_first()
         value := values[head]
         head += 1
-        if head == values.len()
+        if head == #values
             values = []
             head = 0
         elif head >= size()
@@ -292,7 +292,7 @@ class Queue<T>(local T[] initial := [])
     keys := source.keys()
     values := source.values()
     (K, V)[] result := []
-    for: nat i < keys.len()
+    for: nat i < #keys
         result = result.append((keys[i], values[i]))
     return result
 
@@ -368,7 +368,7 @@ private nat vertex_position<K>(map<K, nat> positions, K label, nat absent)
             return absent
 
 DirectedGraph | error directed_graph<K>(K[] vertices, (K, K)[] edges)
-    size := vertices.len()
+    size := #vertices
     map<K, nat> positions
     for: label := vertices[i]
         if positions.has(label)
@@ -394,7 +394,7 @@ class BinaryNodes<T>()
     private BinaryNode<T>[] nodes := []
 
     NodeId .add(T value, NodeId | none left := none, NodeId | none right := none)
-        id := NodeId(nodes.len())
+        id := NodeId(#nodes)
         nodes = nodes.append(BinaryNode<T>(value, left, right))
         return id
 
@@ -408,21 +408,21 @@ class BinaryNodes<T>()
     BinaryNode<T> | error get(NodeId | none id)
         match id
             NodeId
-                if id.slot < nodes.len()
+                if id.slot < #nodes
                     return nodes[id.slot]
             none
                 return error("no binary node at this position", code = "COLLECTIONS_NODE")
         return error("no binary node at this position", code = "COLLECTIONS_NODE")
 
     void | error .set(NodeId id, BinaryNode<T> node)
-        if id.slot >= nodes.len()
+        if id.slot >= #nodes
             return error("no binary node at this position", code = "COLLECTIONS_NODE")
         nodes[id.slot] = node
         return void
 
     NodeId | error leftmost(NodeId id)
         current := id
-        for: nat step < nodes.len()
+        for: nat step < #nodes
             node := get(current)
             match node.left
                 NodeId child
@@ -434,7 +434,7 @@ class BinaryNodes<T>()
     (T, NodeId | none) | error .detach_leftmost(NodeId root)
         NodeId | none parent_id := none
         current := root
-        for: nat step < nodes.len()
+        for: nat step < #nodes
             node := try get(current)
             match node.left
                 NodeId child
@@ -496,7 +496,7 @@ class BinaryNodes<T>()
         queue := Queue<NodeId>()
         enqueue(&queue, root)
         while not queue.empty()
-            if result.len() == nodes.len()
+            if #result == #nodes
                 return error("level-order walk exceeds the number of stored nodes", code = "COLLECTIONS_NODE")
             node := get(.queue.take())
             result = result.append(node.value)

@@ -4,7 +4,7 @@ int[] values := [7, 3, 7, 2, 3]
 int[] stable := collections.unique(values)
 println("unique={stable[0]}:{stable[1]}:{stable[2]}")
 int[] empty := []
-println("empty={collections.unique(empty).len()}")
+println("empty={#collections.unique(empty)}")
 println("index={collections.index(values, 3)}")
 match collections.index(values, 99)
     nat unexpected
@@ -32,7 +32,7 @@ match collections.group_by(keys, empty)
         println("unexpected")
     error problem
         println("length={problem.code}")
-println("unchanged={values.len()}:{values[0]}:{values[4]}")
+println("unchanged={#values}:{values[0]}:{values[4]}")
 
 distinct<int> items := collections.to_distinct(values)
 int[] ordered := items.values()
@@ -42,19 +42,19 @@ sorted_items := items.sorted()
 println("sorted-distinct={sorted_items[0]}:{sorted_items[1]}:{sorted_items[2]}")
 sorted_items[0] = 100
 println("sorted-independent={items.values()[0]}:{items.has(2)}")
-println("empty-sorted-distinct={empty.to_distinct().sorted().len()}")
+println("empty-sorted-distinct={#empty.to_distinct().sorted()}")
 println("sorted-distinct-strings={["z", "a", "z"].to_distinct().sorted().join("|")}")
 sorted_flags := [true, false].to_distinct().sorted()
 println("sorted-distinct-bools={sorted_flags[0]}:{sorted_flags[1]}")
 .items.add(99)
 stable[0] = 100
-println("independent={values.len()}:{values[0]}:{items.size()}")
+println("independent={#values}:{values[0]}:{items.size()}")
 
 string[] repeated := ["first", "second", "first"]
 string[] unique_words := collections.unique(repeated)
 println("words={unique_words.join("|")}")
 println("first-index={collections.index(values, 7)}")
-println("extensions={values.index(2)}:{values.unique().len()}:{values.to_distinct().size()}")
+println("extensions={values.index(2)}:{#values.unique()}:{values.to_distinct().size()}")
 real64[] decimals := [1.25, 2.5, 1.25]
 println("float-index={collections.index(decimals, 1.25)}")
 match collections.group_by(no_keys, values)
@@ -146,7 +146,7 @@ for (label, amount) := collections.sorted_entries(totals)[]
 for (label, amount) := collections.ranked_entries(totals)[]
     println("ranked={label}:{amount}")
 map<string, int> empty_totals
-println("empty-ranked={collections.ranked_entries(empty_totals).len()}")
+println("empty-ranked={#collections.ranked_entries(empty_totals)}")
 
 map<string, string[]> groups_for_sort
 .groups_for_sort.set("z", ["last"])

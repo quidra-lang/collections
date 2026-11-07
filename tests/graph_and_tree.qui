@@ -82,11 +82,11 @@ nat[] outgoing := labeled.outgoing(0)
 int[] indegrees := labeled.indegrees()
 println(outgoing == [nat(1), 0, 1] and indegrees == [int(1), 2, 0])
 indegrees[1] = 0
-println(labeled.indegrees()[1] == 2 and labeled.outgoing(2).len() == 0)
+println(labeled.indegrees()[1] == 2 and #labeled.outgoing(2) == 0)
 (int, int)[] no_edges := []
 int[] no_vertices := []
 collections.DirectedGraph empty_graph := collections.directed_graph(no_vertices, no_edges)
-println(empty_graph.indegrees().len() == 0)
+println(#empty_graph.indegrees() == 0)
 match collections.directed_graph(["a", "a"], labeled_edges)
     error problem
         println(problem.code)

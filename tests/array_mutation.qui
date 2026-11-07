@@ -3,17 +3,17 @@ import collections
 int[] values := [1, 2, 1]
 int[] copied := values
 .values.push(3)
-println("push={values.len()}:{values[3]}:{copied.len()}")
-println("remove={.values.remove(1)}:{values[0]}:{values.len()}")
-println("remove-missing={.values.remove(9)}:{values.len()}")
+println("push={#values}:{values[3]}:{#copied}")
+println("remove={.values.remove(1)}:{values[0]}:{#values}")
+println("remove-missing={.values.remove(9)}:{#values}")
 .values.insert(position = 0, value = 7)
-.values.insert(values.len(), 8)
+.values.insert(#values, 8)
 .values.insert(2, 9)
 println("insert={values[0]}:{values[2]}:{values[5]}")
-println("take={.values.take()}:{values.len()}")
+println("take={.values.take()}:{#values}")
 match .values.pop()
     int value
-        println("pop={value}:{values.len()}")
+        println("pop={value}:{#values}")
     none
         println("unexpected")
 println("copy={copied[0]}:{copied[1]}:{copied[2]}")
@@ -21,11 +21,11 @@ match .values.insert(99, 4)
     void
         println("unexpected")
     error failure
-        println("insert-error={failure.code}:{values.len()}:{values[0]}:{values[2]}")
-println("remove-last={.values.remove(1)}:{values.len()}")
+        println("insert-error={failure.code}:{#values}:{values[0]}:{values[2]}")
+println("remove-last={.values.remove(1)}:{#values}")
 println("remove-middle={.values.remove(2)}:{values[1]}")
 int[] single := [4]
-println("remove-single={.single.remove(4)}:{single.len()}")
+println("remove-single={.single.remove(4)}:{#single}")
 int[] empty := []
 println("remove-empty={.empty.remove(1)}")
 match .empty.pop()
@@ -39,9 +39,9 @@ match .empty.take()
     error failure
         println("empty-take={failure.code}")
 .empty.insert(0, 5)
-println("insert-empty={.empty.take()}:{empty.len()}")
+println("insert-empty={.empty.take()}:{#empty}")
 .empty.push(6)
-println("pop-single={.empty.take()}:{empty.len()}")
+println("pop-single={.empty.take()}:{#empty}")
 (string, int)[] pairs := [("a", 1)]
 .pairs.push(("b", 2))
 println("tuple-remove={.pairs.remove(("a", 1))}")
@@ -72,10 +72,10 @@ int removed_at := .positions.remove_at(position = 2)
 println("remove-at={removed_at}:{positions == [int(9), 4, 6]}")
 match .positions.remove_at(3)
     error problem
-        println("remove-at-error={problem.code}:{positions.len()}")
+        println("remove-at-error={problem.code}:{#positions}")
     int
         println("unexpected removal")
 int last_at := .positions.remove_at(2)
 int first_at := .positions.remove_at(0)
 int only_at := .positions.remove_at(0)
-println("remove-at-boundaries={last_at}:{first_at}:{only_at}:{positions.len()}")
+println("remove-at-boundaries={last_at}:{first_at}:{only_at}:{#positions}")
