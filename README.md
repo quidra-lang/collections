@@ -10,7 +10,7 @@ On `develop`, `#value` is the ordinary zero-argument `value.len()` call. It also
 quidra install quidra-collections
 ```
 
-Use the matching Quidra 0.6.x Core toolchain. The compatibility workflow pins [Core `43328df`](https://github.com/quidra-lang/quidra/commit/43328df98bfb17df13b27b852068263a0453c687) for `#value`, `.len()` and `func<R(P...)>` callback types. Development occurs on `develop`.
+Use the matching Quidra 0.6.x Core toolchain. The compatibility workflow pins [Core `61eb141`](https://github.com/quidra-lang/quidra/commit/61eb1411721c7eb7f444c6d9af15fb72fbeb7a6a) for `#value`, `.len()` and `func<R(P...)>` callback types. Development occurs on `develop`.
 
 ## FIFO queue
 
